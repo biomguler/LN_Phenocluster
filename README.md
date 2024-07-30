@@ -1,4 +1,4 @@
-GitHub Repository Description
+LN Phenocluster Manuscript Pipeline
 -----------------------------
 
 **Project Name:** Lymphoid neoplasms (LN) phenocluster
