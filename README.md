@@ -17,6 +17,7 @@ LN Phenocluster Manuscript Pipeline
 | regenie | 3.2.1 | [regenie](https://github.com/rgcgithub/regenie) |
 | plink | 1.90b6.21 | [plink](https://www.cog-genomics.org/plink/) |
 | plink2 | 2.00a3LM | [plink2](https://www.cog-genomics.org/plink/2.0/) |
+| gps_cpp | beta | [gps_cpp](https://github.com/twillis209/gps_cpp/tree/remove_po_dependency) |
 | **R Packages** |  |  |
 | ASSSET | 2.18.0 | [ASSSET](https://bioconductor.org/packages/release/bioc/html/ASSET.html) |
 | tidyverse | 2.0.0 | [tidyverse](https://www.tidyverse.org/) |
