@@ -9,16 +9,19 @@ LN Phenocluster Manuscript Pipeline
 
 * * * * *
 
-### Required Software and R Packages
+### Required Softwares
 
-| **Software/Package** | **Version** | **Link/Citation** |
+| **Software** | **Version** | **Link/Citation** |
 | --- | --- | --- |
-| **Software** |  |  |
 | regenie | 3.2.1 | [regenie](https://github.com/rgcgithub/regenie) |
 | plink | 1.90b6.21 | [plink](https://www.cog-genomics.org/plink/) |
 | plink2 | 2.00a3LM | [plink2](https://www.cog-genomics.org/plink/2.0/) |
 | gps_cpp | beta | [gps_cpp](https://github.com/twillis209/gps_cpp/tree/remove_po_dependency) |
-| **R Packages** |  |  |
+
+### Required R Packages
+
+| **R Package** | **Version** | **Link/Citation** |
+| --- | --- | --- |
 | ASSSET | 2.18.0 | [ASSSET](https://bioconductor.org/packages/release/bioc/html/ASSET.html) |
 | tidyverse | 2.0.0 | [tidyverse](https://www.tidyverse.org/) |
 | ggplot2 | 3.1.3.1 | [gplots](https://github.com/talgalili/gplots) |
