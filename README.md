@@ -15,14 +15,14 @@ LN Phenocluster Manuscript Pipeline
 | --- | --- | --- |
 | **Software** |  |  |
 | regenie | 3.2.1 | [regenie](https://github.com/rgcgithub/regenie) |
-| plink | 1.90b6.21 | plink |
-| plink2 | 2.00a3LM | plink2 |
+| plink | 1.90b6.21 | [plink](https://www.cog-genomics.org/plink/) |
+| plink2 | 2.00a3LM | [plink2](https://www.cog-genomics.org/plink/2.0/) |
 | **R Packages** |  |  |
-| ASSSET | 3.0 | ASSSET |
-| tidyverse | 1.3.1 | tidyverse |
-| ggplot2 | 3.3.5 | ggplot2 |
-| dentexted | 1.0 | dentexted |
-| data.table | 1.14.2 | data.table |
+| ASSSET | 2.18.0 | [ASSSET](https://bioconductor.org/packages/release/bioc/html/ASSET.html) |
+| tidyverse | 2.0.0 | [tidyverse](https://www.tidyverse.org/) |
+| ggplot2 | 3.1.3.1 | [gplots](https://github.com/talgalili/gplots) |
+| dendextend | 1.17.1 | [dendextend](https://academic.oup.com/bioinformatics/article/31/22/3718/240978) |
+| data.table | 1.14.10 | [data.table](https://github.com/Rdatatable/data.table) |
 
 ### Steps
 
