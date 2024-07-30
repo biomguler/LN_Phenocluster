@@ -63,13 +63,13 @@ LN Phenocluster Manuscript Pipeline
 > This repository is created to enhance reproduciblity. It will not actively maintained.
 
 > [!TIP]
-> If you need any help at any step please send me an [email](murat.guler@dkfz.de)
+> If you need any help at any step please send me an [email](mailto:murat.guler@dkfz.de).
 
 > [!IMPORTANT]
-> It is impossible to share full data sets that are used in the pipeline like UKBB data and ssome steps need manual check and create data files.
+> It is impossible to share full data sets that are used in the pipeline like UKBB data and some steps need manual check and create data files.
 
 > [!WARNING]
 > The pipeline or any part of work can not use medical/diagnostic proposes.
 
 > [!CAUTION]
-> IF you use any part of this pipeline in your work please cite our orginal work!
+> If you use any part of this pipeline in your work please cite our orginal work!
