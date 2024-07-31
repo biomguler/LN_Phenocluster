@@ -30,20 +30,25 @@ LN Phenocluster Manuscript Pipeline
 
 ### Steps
 
+* * * * *
+
 #### 1) Create phenoclusters
 
-<p style="text-align: justify;">
-The data for somatic mutation patterns (SData2.txt) and approved drugs (SData2.txt) were accessed on cBioPortal and the Open Targets Platform, respectively.
-  
-For the approved drugs, each phenotype searched on Opentarget platform and each drug (at least phase 3&4) maunally drugs searched on public data bases to check FDA or EMA approval for clinical usage. The LN subtypes-drug binary matrix (0,1) created based on this  information, in the data folder created LN-drug matrix provided as ***SData2.txt***.
+<p style="text-align: justify;"> The data for somatic mutation patterns (SData2.txt) and approved drugs (SData2.txt) were accessed on cBioPortal and the Open Targets Platform, respectively.
 
-For the somatic mutations, each LN phenotype and somatically mutated genes downloaded from cBioPortal. The LN subtypes-mutated gene binary matrix (0,1) created based on detected mutated genes without their frequency or position, in the data folder created LN-mutated genes matrix provided as ***SData2.txt***.
+For the approved drugs, each phenotype was searched on the Open Targets platform, and each drug (at least phase 3&4) was manually searched on public databases to check FDA or EMA approval for clinical usage. The LN subtypes-drug binary matrix (0,1) was created based on this information, and the data folder created LN-drug matrix provided as ***SData2.txt***.
+
+For the somatic mutations, each LN phenotype and somatically mutated genes were downloaded from cBioPortal. The LN subtypes-mutated gene binary matrix (0,1) was created based on detected mutated genes without their frequency or position, and the data folder created LN-mutated genes matrix provided as ***SData2.txt***.
 
 </p>
+
+* * * * *
 
 #### 2) GWAS with regenie
 
   will be described here full!!
+
+  * * * * *
 
 #### 3) ASSET
 
