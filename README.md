@@ -27,6 +27,8 @@ LN Phenocluster Manuscript Pipeline
 | ggplot2 | 3.1.3.1 | [gplots](https://github.com/talgalili/gplots) |
 | dendextend | 1.17.1 | [dendextend](https://academic.oup.com/bioinformatics/article/31/22/3718/240978) |
 | data.table | 1.14.10 | [data.table](https://github.com/Rdatatable/data.table) |
+| parallel | 4.3.0 | [parallel](https://www.R-project.org/) |
+| magrittr | 2.0.3 | [magrittr](https://CRAN.R-project.org/package=magrittr) |
 
 ### Steps
 
