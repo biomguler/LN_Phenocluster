@@ -40,6 +40,10 @@ For the approved drugs, each phenotype was searched on the Open Targets platform
 
 For the somatic mutations, each LN phenotype and somatically mutated genes were downloaded from cBioPortal. The LN subtypes-mutated gene binary matrix (0,1) was created based on detected mutated genes without their frequency or position, and the data folder created LN-mutated genes matrix provided as ***SData2.txt***.
 
+After creating this two data files, for each dataset, hierarchical clustering (hclust) analysis methods compared by using **00_Compare_hclust_method.R** script.
+
+dendrograms were obtained by Ward's method using the Jaccard similarity coefficient
+
 </p>
 
 * * * * *
