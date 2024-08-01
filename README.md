@@ -53,7 +53,7 @@ After running **00_Compare_hclust_method.R** script, the selected hclust method 
 
 * * * * *
 
-#### 2) GWAS with regenie
+#### 2) QC genetic data and GWAS with regenie
 
   will be described here full!!
 
