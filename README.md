@@ -45,7 +45,7 @@ For the somatic mutations, each LN phenotype and somatically mutated genes were 
 After creating this two data files, for each dataset, hierarchical clustering (hclust) analysis methods compared by using **00_Compare_hclust_method.R** script. The script aims to compare hierarchical clustering (hclust) algorithms by generating correlation plots and calculating the Fowlkes-Mallows Index. The resulting dendrograms are stored and analyzed for cophenetic correlation (Pearson correlation coefficient) and Fowlkes-Mallows Index for different cluster counts (k=3, 4, 5). Finally, the script visualizes these correlations using correlation plots saved as TIFF images, providing a comprehensive comparison of the clustering methods.
 
 > [!NOTE]
-> For somatic mutation data method comparison done with nearly 10 000 genes that are mutated in more than half of subtypes becuase of computational restrictions. But, in the next step whole data set used.
+> For somatic mutation data method comparison done with nearly 10 000 genes that are mutated in more than 20% of subtypes becuase of computational restrictions. But, in the next step whole data set used.
 
 After running **00_Compare_hclust_method.R** script, the selected hclust method used in **01_LNcluster.R** script to generate and visualize phenocluster. The script creates dendrograms by using Ward's method and the Jaccard similarity coefficient (in R dist(method = "binary")). The dendrograms are then used to create heatmaps (heatmap.2 from gplots package) that visualize relationships between drugs or genes and LN subtypes. The resulting heatmaps are saved as TIFF images (drug_plot.tiff and somatic_plot.tiff).
 
