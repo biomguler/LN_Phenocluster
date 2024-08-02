@@ -1,13 +1,17 @@
-###########################################################
-# LM cluster analysis
-# Murat Guler
-# Initiate date: 
-# Current date: 
-###########################################################
+#############################################################################
+# Title:    LN phenoclusters
+# Function: Creating clusters from binary data
+# Author:   Murat Guler (murat.guler@dkfz.de, muratgmbg@gmail.com)
+# Date:     Jan 23th 2022
+# Note:     Please let me know if you have any trouble
+#############################################################################
+# Free R memory and remove prior environment
 rm(list=ls())
 gc()
-###########################################################
-# Install required packages
+#############################################################################
+# Packages
+
+# Install required packages, if not installed
 
 install_if_missing <- function(package) {
   if (!require(package, character.only = TRUE)) {
