@@ -29,6 +29,7 @@ LN Phenocluster Manuscript Pipeline
 | data.table | 1.14.10 | [data.table](https://github.com/Rdatatable/data.table) |
 | parallel | 4.3.0 | [parallel](https://www.R-project.org/) |
 | magrittr | 2.0.3 | [magrittr](https://CRAN.R-project.org/package=magrittr) |
+| colorspace | 2.1.0 | [colorspace](https://doi.org/10.1016/j.csda.2008.11.033) |
 
 ### Steps
 
@@ -48,6 +49,36 @@ After creating this two data files, for each dataset, hierarchical clustering (h
 > For somatic mutation data method comparison done with nearly 10 000 genes that are mutated in more than 20% of subtypes becuase of computational restrictions. But, in the next step whole data set used.
 
 After running **00_Compare_hclust_method.R** script, the selected hclust method used in **01_LNcluster.R** script to generate and visualize phenocluster. The script creates dendrograms by using Ward's method and the Jaccard similarity coefficient (in R dist(method = "binary")). The dendrograms are then used to create heatmaps (heatmap.2 from gplots package) that visualize relationships between drugs or genes and LN subtypes. The resulting heatmaps are saved as TIFF images (drug_plot.tiff and somatic_plot.tiff).
+
+Finaly, to run these scripts please run code below:
+
+```r
+Rscript --slave --no-restore --no-save scripts/00_compare_hclust_methods.R
+Rscript --slave --no-restore --no-save scripts/01_phenocluster.R
+```
+You can run these two one-line codes in you R terminal (**not console**), and if you have access to any HPC, you can push these script with a job runner script. The script **03_LNcluster.bsub** is created for IBM LSF job scheduler.
+But, this script easly can be converted to commonly used scheduler such as SLURM or PBS. In pipeline all runner scripts were created for LSF and as an example how to convert this scripts to SLURM or any other platform an example code snippet for SLURM given in below:
+
+```bash
+#!/bin/bash
+#SBATCH --partition=long                    # Set your partition
+#SBATCH --job-name=LNcluster                # Name of the job
+#SBATCH --ntasks=1                          # Request a core
+#SBATCH --mem=32G                           # Request a total memory limit of 32GB for the job
+#SBATCH --output=/your/out/dir/LN_cluster.out  # Give path for the out file
+#SBATCH --error=/your/err/dir/LN_cluster.err   # Give path for the err file
+
+# Load modules
+module load R/4.3.0
+
+# Set script dir
+cd /scripts
+
+# Rscript
+Rscript --slave --no-restore --no-save scripts/00_compare_hclust_methods.R
+Rscript --slave --no-restore --no-save scripts/01_phenocluster.R
+
+```
 
 </p>
 
