@@ -1,0 +1,25 @@
+#!/bin/bash
+#BSUB -q long                            #Set you submission
+#BSUB -J regenie_step1_LM                #Name of the job
+#BSUB -n 32                              #Request 32 cores
+#BSUB -R "span[ptile=32]"                #Request 8 cores per node.
+#BSUB -R "rusage[mem=8GB]"               #Request 8GB per core for the job
+#BSUB -o /your/out/dir/rg_step1_LM.out   #Give path for the out file
+#BSUB -e /your/err/dir/rg_step1_LM.err   #Give path for the err file
+
+
+#Load modules
+module load regenie/3.2.2
+
+#Regenie step1
+regenie \
+  --step 1 \
+  --bed ukb_cal_allChrs \
+  --extract qc_pass.snplist \
+  --keep qc_pass.id \
+  --phenoFile ukb_phenotypes_LM.txt \
+  --covarFile ukb_covariates_LM.txt \
+  --bt \
+  --bsize 1000 \
+  --lowmem \
+  --out ukb_step1_LM
