@@ -1,0 +1,19 @@
+#!/bin/bash
+#BSUB -q long                          #Set you submission
+#BSUB -J LNcluster                     #Name of the job
+#BSUB -n 1                             #Request a core
+#BSUB -R "rusage[mem=32GB]"            #Request a total memory limit of 32GB for the job
+#BSUB -o /your/out/dir/LN_cluster.out  #Give path for the out file
+#BSUB -e /your/err/dir/LN_cluster.err  #Give path for the err file
+
+
+# Load modules
+module load R/4.3.0
+
+
+# set script dir
+cd /scripts
+# Rscript
+
+Rscript --slave --no-restore --no-save scripts/00_compare_hclust_methods.R
+Rscript --slave --no-restore --no-save scripts/01_phenocluster.R
