@@ -22,7 +22,7 @@ LN Phenocluster Manuscript Pipeline
 
 | **R Package** | **Version** | **Link/Citation** |
 | --- | --- | --- |
-| ASSSET | 2.18.0 | [ASSSET](https://bioconductor.org/packages/release/bioc/html/ASSET.html) |
+| ASSET | 2.18.0 | [ASSET](https://bioconductor.org/packages/release/bioc/html/ASSET.html) |
 | tidyverse | 2.0.0 | [tidyverse](https://www.tidyverse.org/) |
 | ggplot2 | 3.1.3.1 | [gplots](https://github.com/talgalili/gplots) |
 | dendextend | 1.17.1 | [dendextend](https://academic.oup.com/bioinformatics/article/31/22/3718/240978) |
