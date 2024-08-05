@@ -1,0 +1,33 @@
+#!/bin/bash
+#BSUB -q long
+#BSUB -J regenie_step2_LM[1-22]
+#BSUB -n 64                  #Request 64 cores
+#BSUB -R "span[ptile=32]"    #Request 1 cores per node.
+#BSUB -R "rusage[mem=10000]"  #Request 10000MB per core for the job
+#BSUB -o /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/rg_step2_LM_%J_%I.out
+#BSUB -e /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/rg_step2_LM_%J_%I.err
+#BSUB -M 2000000                #Set the per process enforceable memory limit to 80000MB.
+
+#PATH
+cd /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls
+
+#Load modules
+module load regenie/3.2.2
+
+#Regenie step2
+regenie \
+  --step 2 \
+  --bgen  /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Imputation/Imputation_from_genotype/ukb22828_c${LSB_JOBINDEX}_b0_v3.bgen \
+  --ref-first \
+  --sample /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Imputation/Imputation_from_genotype/ukb22828_c${LSB_JOBINDEX}_b0_v3_s487188.sample \
+  --phenoFile ukb_phenotypes_LM.txt \
+  --covarFile ukb_covariates_LM.txt \
+  --bt \
+  --gz \
+  --af-cc \
+  --spa --pThresh 0.01 \
+  --pred ukb_step1_LM_pred.list \
+  --bsize 400 \
+  --threads 128 \
+  --out ukb_step2_BT_chr${LSB_JOBINDEX}
+  
