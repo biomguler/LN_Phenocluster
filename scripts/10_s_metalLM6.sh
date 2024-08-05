@@ -17,8 +17,8 @@ FREQ A1FREQ
 STDERR SE
 
 
-PROCESS	/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/DLBCL/DLBCL_out_A1FREQ0p001_info0p9.txt
-PROCESS	/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/MM/MM_out_A1FREQ0p001_info0p9.txt
+PROCESS	/LM_GWAS/DLBCL/DLBCL_out_A1FREQ0p001_info0p9.txt
+PROCESS	/LM_GWAS/MM/MM_out_A1FREQ0p001_info0p9.txt
 
 #for the final meta-analysis of all 8 samples only output results if the
 
