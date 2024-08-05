@@ -1,0 +1,75 @@
+#!/bin/bash
+#BSUB -q long
+#BSUB -J awk_gwaslab[1-15]
+#BSUB -n 16                  #Request 64 cores
+#BSUB -R "span[ptile=8]"    #Request 8 cores per node.
+#BSUB -R "rusage[mem=200GB]"  #Request 10000MB per core for the job
+#BSUB -o /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files/awkgwaslab_%J_%I.out
+#BSUB -e /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files/awkgwaslab_%J_%I.err
+#BSUB -M 200GB                #Set the per process enforceable memory limit to 80000MB.
+# This script generates and subsets regenie outputs
+# All association results for each phenotype should be in a separate folder
+# Define variables
+# Here put your step2 regenie out file path
+pheno1=Cell_B
+pheno2=Cell_P
+pheno3=CLL
+pheno4=DLBCL
+pheno5=Drug_G1
+pheno6=FL
+pheno7=HL
+pheno8=LM
+pheno9=LPL_WM
+pheno10=MGUS
+pheno11=MM_MGUS
+pheno12=MM
+pheno13=MZL
+pheno14=Soma_G1
+pheno15=Soma_G2
+
+path0=/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/
+path1=${path0}Cell_B
+path2=${path0}Cell_P
+path3=${path0}CLL
+path4=${path0}DLBCL
+path5=${path0}Drug_G1
+path6=${path0}FL
+path7=${path0}HL
+path8=${path0}LM
+path9=${path0}LPL_WM
+path10=${path0}MGUS
+path11=${path0}MM_MGUS
+path12=${path0}MM
+path13=${path0}MZL
+path14=${path0}Soma_G1
+path15=${path0}Soma_G2
+
+
+
+# array
+combined1=path${LSB_JOBINDEX}
+combined2=pheno${LSB_JOBINDEX}
+
+cd ${!combined1}
+#add GRCH37_p13 names like CHROM:PENPOS:A0:A1 and P value
+awk 'NR==1 {print $0, "SNP", "P"; next} {print $0, $1":"$2":"$4":"$5, 10^(-1*$17)}' assoc.${!combined2}.all.regenie > ${!combined2}_out_grch37p13.txt
+
+#create gzipped outputs
+gzip -c ${!combined2}_out_grch37p13.txt > ${!combined2}_out_grch37p13.txt.gz
+
+#filter sumstats
+awk '{if(NR==1 || $6 >= 0.001 && $9 >= 0.9 && $18 != "TEST_FAIL") print}' ${!combined2}_out_grch37p13.txt>${!combined2}_out_A1FREQ0p001_info0p9.txt
+#create filtered-gziiped files
+gzip -c ${!combined2}_out_A1FREQ0p001_info0p9.txt > ${!combined2}_out_A1FREQ0p001_info0p9.txt.gz
+
+
+
+
+
+
+
+
+
+
+
+
