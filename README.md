@@ -17,6 +17,7 @@ LN Phenocluster Manuscript Pipeline
 | plink | 1.90b6.21 | [plink](https://www.cog-genomics.org/plink/) |
 | plink2 | 2.00a3LM | [plink2](https://www.cog-genomics.org/plink/2.0/) |
 | gps_cpp | beta | [gps_cpp](https://github.com/twillis209/gps_cpp/tree/remove_po_dependency) |
+| R | 4.3.0 or above | [R](https://www.r-project.org/) |
 
 ### Required R Packages
 
