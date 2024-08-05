@@ -8,4 +8,4 @@
 #BSUB -e /your/err/dir/metal_%J_%I.out
 
 # Run metal scripts
-./metal metalLM${LSB_JOBINDEX}.sh > metalLM${LSB_JOBINDEX}.log
+./metal 10_s_metalLM${LSB_JOBINDEX}.sh > metalLM${LSB_JOBINDEX}.log
