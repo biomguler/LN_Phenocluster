@@ -1,81 +1,72 @@
 #############################################################################
-#Title:    asset
-#Function: asset analysis
-#Author:   Murat Guler
-#Time:     Nov 8th 2023
+# Title:    ASSET parallel
+# Function: ASSET analysis
+# Author:   Murat Guler (murat.guler@dkfz.de, muratgmbg@gmail.com)
+# Date:     Jan 23th 2022
+# Note:     Please let me know if you have any trouble
 #############################################################################
+# Free R memory and remove prior environment
 rm(list=ls())
 gc()
 #############################################################################
+# Packages
 
-#required packages
+# Install required packages, if not installed
+
+install_if_missing <- function(package) {
+  if (!require(package, character.only = TRUE)) {
+    install.packages(package, dependencies = TRUE)
+    library(package, character.only = TRUE)
+  }
+}
+
+# List of packages to install and load
+packages <- c("data.table", "ASSET", "dplyr", "purr", "parallel")
+
+# Install and load each package
+for (package in packages) {
+  install_if_missing(package)
+}
+
+# Load required packages
 library(ASSET)
 library(data.table)
 library(dplyr)
 library(parallel)
 library(purrr)
+
 # setwd
 setwd("/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/")
+
+# Define phenotypes
+phenotypes <- c("CLL", "DLBCL", "FL", "HL", "LPL_WM", "MGUS", "MM", "MZL")
+
 # Get data dir
 main_dir <- "/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS"
-dir_list <- list.dirs(main_dir,recursive = FALSE)
-dir_list <- dir_list[dir_list != "/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files"]
-dir_list <- dir_list[dir_list != "/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/asset"]
-dir_list <- dir_list[dir_list != "/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/sumResults"]
-dir_names <- list.dirs(main_dir,full.names = FALSE, recursive = FALSE)
-dir_names <- dir_names[dir_names != "LM_files"]
-dir_names <- dir_names[dir_names != "sumResults"]
-dir_names <- dir_names[dir_names != "asset"]
-df <- data.frame(path=c(dir_list), name=c(dir_names))
+
+# Initialize an empty list to store paths
+paths_list <- list()
+
+# Loop through phenotypes and store paths
+for (pheno in phenotypes) {
+  path <- paste0(main_dir, "/", pheno)
+  paths_list[[pheno]] <- path
+}
 
 
 # Read GWAS sumstat, extract BETA and SE
-CLL <- paste0(df[3, 1], "/", df[3, 2], "_out_A1FREQ0p001_info0p9.txt")
-gwas_CLL <- fread(CLL, header = TRUE, na.strings="NA", sep = " ")
-gwas_CLL <- gwas_CLL[,c(19,14,15)]
-names(gwas_CLL) <- c("SNP", "CLL.BETA", "CLL.SE")
 
-DLBCL <- paste0(df[4, 1], "/", df[4, 2], "_out_A1FREQ0p001_info0p9.txt")
-gwas_DLBCL <- fread(DLBCL, header = TRUE, na.strings="NA", sep = " ")
-gwas_DLBCL <- gwas_DLBCL[,c(19,14,15)]
-names(gwas_DLBCL) <- c("SNP", "DLBCL.BETA", "DLBCL.SE")
+gwas_list <- list()
+for (i in 1:8) {
+  pheno <- phenotypes[i]
+  sumstats_path <- paste0(paths_list[i], "/", phenotypes[i], "_out_A1FREQ0p001_info0p9.txt")
+  sumstats <- fread(sumstats_path, header = TRUE, na.strings="NA", select= c(19,14,15), sep = " ")
+  names(sumstats) <- c("SNP", paste0(phenotypes[i], ".BETA"), paste0(phenotypes[i], ".SE"))
+  gwas_list[[pheno]] <- sumstats}
+ 
 
-FL <- paste0(df[6, 1], "/", df[6, 2], "_out_A1FREQ0p001_info0p9.txt")
-gwas_FL <- fread(FL, header = TRUE, na.strings="NA", sep = " ")
-gwas_FL <- gwas_FL[,c(19,14,15)]
-names(gwas_FL) <- c("SNP", "FL.BETA", "FL.SE")
 
-HL <- paste0(df[7, 1], "/", df[7, 2], "_out_A1FREQ0p001_info0p9.txt")
-gwas_HL <- fread(HL, header = TRUE, na.strings="NA", sep = " ")
-gwas_HL <- gwas_HL[,c(19,14,15)]
-names(gwas_HL) <- c("SNP", "HL.BETA", "HL.SE")
-
-LPL_WM <- paste0(df[9, 1], "/", df[9, 2], "_out_A1FREQ0p001_info0p9.txt")
-gwas_LPL_WM <- fread(LPL_WM, header = TRUE, na.strings="NA", sep = " ")
-gwas_LPL_WM <- gwas_LPL_WM[,c(19,14,15)]
-names(gwas_LPL_WM) <- c("SNP", "LPL_WM.BETA", "LPL_WM.SE")
-
-MGUS <- paste0(df[10, 1], "/", df[10, 2], "_out_A1FREQ0p001_info0p9.txt")
-gwas_MGUS <- fread(MGUS, header = TRUE, na.strings="NA", sep = " ")
-gwas_MGUS <- gwas_MGUS[,c(19,14,15)]
-names(gwas_MGUS) <- c("SNP", "MGUS.BETA", "MGUS.SE")
-
-MM <- paste0(df[11, 1], "/", df[11, 2], "_out_A1FREQ0p001_info0p9.txt")
-gwas_MM <- fread(MM, header = TRUE, na.strings="NA", sep = " ")
-gwas_MM <- gwas_MM[,c(19,14,15)]
-names(gwas_MM) <- c("SNP", "MM.BETA", "MM.SE")
-
-MZL <- paste0(df[13, 1], "/", df[13, 2], "_out_A1FREQ0p001_info0p9.txt")
-gwas_MZL <- fread(MZL, header = TRUE, na.strings="NA", sep = " ")
-gwas_MZL <- gwas_MZL[,c(19,14,15)]
-names(gwas_MZL) <- c("SNP", "MZL.BETA", "MZL.SE")
-
-#merge sumstats
-
-# List of data frames
-gwas_list <- list(gwas_CLL, gwas_DLBCL, gwas_FL, gwas_HL, gwas_LPL_WM, gwas_MGUS, gwas_MM, gwas_MZL)
-
-# Perform iterative merging using reduce
+# Merge sumstats
 
 gwas_merge <- reduce(gwas_list, inner_join, by = "SNP")
 
