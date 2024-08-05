@@ -106,11 +106,11 @@ List of script and their functions for the step1:
 
   will be described here full!!
 
-#### 5) Create FUMA inputs
+#### 5) GPS-GEV Test
 
   will be described here full!!
 
-#### 6) GPS-GEV Test
+#### 6) Create FUMA inputs
 
   will be described here full!!
 
@@ -118,7 +118,10 @@ List of script and their functions for the step1:
 
   will be described here full!!
 
-#### 8) 
+#### 8) Plots
+
+  will be described here full!!
+
 
 * * * * *
 
