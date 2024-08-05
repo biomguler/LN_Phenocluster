@@ -80,6 +80,14 @@ Rscript --slave --no-restore --no-save scripts/01_phenocluster.R
 
 ```
 
+List of script and their functions for the step1:
+
+| **Script** | **Function** |
+| --- | --- |
+| 00 | [Compare hclust methods](scripts/00_compare_hclust_methods.R) |
+| 01 | [Create phenoclusters and visualize](scripts/01_phenocluster.R) |
+| 03 | [Runner script for script 00 and 01](scripts/03_LNcluster.bsub) |
+
 </p>
 
 * * * * *
