@@ -25,5 +25,5 @@ regenie \
   --pred ukb_step1_LM_pred.list \
   --bsize 400 \
   --threads 128 \
-  --out ukb_step2_BT_chr${LSB_JOBINDEX}
+  --out ukb_step2_LM_chr${LSB_JOBINDEX}
   
