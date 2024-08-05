@@ -1,0 +1,11 @@
+#!/bin/bash
+#BSUB -q long
+#BSUB -J metal[1-8]
+#BSUB -n 8
+#BSUB -R "rusage[mem=8GB]"
+#BSUB -R "rusage[mem=200000]"  #Request a total memory limit of 200GB for the job
+#BSUB -o /your/out/dir/metal_%J_%I.out
+#BSUB -e /your/err/dir/metal_%J_%I.out
+
+# Run metal scripts
+./metal metalLM${LSB_JOBINDEX}.sh > metalLM${LSB_JOBINDEX}.log
