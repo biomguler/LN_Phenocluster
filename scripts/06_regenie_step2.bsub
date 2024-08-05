@@ -1,11 +1,11 @@
 #!/bin/bash
-#BSUB -q long                            #Set you submission
-#BSUB -J regenie_step2_LM                #Name of the job
-#BSUB -n 64                              #Request 64 cores
-#BSUB -R "span[ptile=16]"                #Request 4 cores per node.
-#BSUB -R "rusage[mem=8GB]"               #Request 8GB per core for the job
-#BSUB -o /your/out/dir/rg_step2_LM.out   #Give path for the out file
-#BSUB -e /your/err/dir/rg_step2_LM.err   #Give path for the err file
+#BSUB -q long                                  #Set you submission
+#BSUB -J regenie_step2_LM[1-22]                #Name of the job
+#BSUB -n 64                                    #Request 64 cores
+#BSUB -R "span[ptile=16]"                      #Request 4 cores per node.
+#BSUB -R "rusage[mem=8GB]"                     #Request 8GB per core for the job
+#BSUB -o /your/out/dir/rg_step2_LM_%J_%I.out   #Give path for the out file
+#BSUB -e /your/err/dir/rg_step2_LM_%J_%I.err   #Give path for the err file
 
 #Load modules
 module load regenie/3.2.2
