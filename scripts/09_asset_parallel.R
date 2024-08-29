@@ -36,13 +36,13 @@ library(parallel)
 library(purrr)
 
 # setwd
-setwd("/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/")
+setwd("/your/sumstats/dir")
 
-# Define phenotypes
+# Define phenotypes (your sumstats are in the seperate dirs names as phenotpye names)
 phenotypes <- c("CLL", "DLBCL", "FL", "HL", "LPL_WM", "MGUS", "MM", "MZL")
 
 # Get data dir
-main_dir <- "/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS"
+main_dir <- "/your/sumstats/dir"
 
 # Initialize an empty list to store paths
 paths_list <- list()
@@ -136,7 +136,7 @@ stopCluster(cl)
 combined_df <- bind_rows(summary_list)
 
 #Save
-setwd("/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/asset/")
+setwd("/your/output/dir")
 
 # Write combined_df to a tab-delimited text file without row names
 fwrite(combined_df, "asset_sumstat.txt", sep = "\t", quote = FALSE, row.names = FALSE)
