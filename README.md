@@ -109,7 +109,7 @@ bsub < scripts/05_regenie_step1.bsub -R "rusage[mem=32G]"
 
 ```
 
-The REGENIE step 1 will generate "ukb_step1_LM_pred.list" file and by using this and imputated genotype files (bgen), we can run step 2.
+The REGENIE step 1 will generate **ukb_step1_LM_pred.list** file and by using this and imputated genotype files (bgen), we can run step 2.
 
 ```bash
 bsub < scripts/06_regenie_step2.bsub -R "rusage[mem=32G]"
@@ -122,6 +122,25 @@ The step 2, will generate GWAS results for each phenotype seperated by chromosom
 bash scripts/07_merge_regenie_outputs.sh
 
 ```
+
+Finally, we can filter and format the GWAS summary statistics. The script **08_filter_format_sumstats.bsub**, creates unique SNP ids (CHR:POS:REF:TEST), covert -log10P to P and filter Info_score and SPA correction failed tests. 
+
+```bash
+bsub < scripts/08_filter_format_sumstats.bsub -R "rusage[mem=32G]"
+
+```
+
+List of script and their functions for the step2:
+
+| **Script** | **Function** |
+| --- | --- |
+| 04 | [QC genotype for regenie step1 ](scripts/04_qc.sh) |
+| 05 | [REGENIE STEP1](scripts/05_regenie_step1.bsub) |
+| 06 | [REGENIE STEP2](scripts/06_regenie_step2.bsub) |
+| 07 | [Merge REGENIE OUTPUTS](scripts/07_merge_regenie_outputs.sh) |
+| 08 | [Filter and format SUMSTATS](scripts/08_filter_format_sumstats.bsub) |
+
+</p>
 
 
   * * * * *
