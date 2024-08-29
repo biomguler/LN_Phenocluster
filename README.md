@@ -95,7 +95,34 @@ List of script and their functions for the step1:
 
 #### 2) QC genetic data and GWAS with regenie
 
-  will be described here full!!
+REGENIE uses a two-step approach. In the first step, original non-imputed genotype data is used, filtering only high-quality genotyped variants: minor allele frequency (MAF) > 1%, minor allele count (MAC) > 5, genotyping rate >99%, Hardy-Weinberg equilibrium (HWE) test P > 1E−08, <1% missingness. The quality control of genotype data and filtering was done by using plink2 software. The script **04_qc.sh** combine all chromosemes and create list of SNPs which meet QC criteria. 
+
+```bash
+bash scripts/04_qc.sh
+
+```
+
+After the QC step, we can run REGENIE step 1.
+
+```bash
+bsub < scripts/05_regenie_step1.bsub -R "rusage[mem=32G]"
+
+```
+
+The REGENIE step 1 will generate "ukb_step1_LM_pred.list" file and by using this and imputated genotype files (bgen), we can run step 2.
+
+```bash
+bsub < scripts/06_regenie_step2.bsub -R "rusage[mem=32G]"
+
+```
+
+The step 2, will generate GWAS results for each phenotype seperated by chromosomes. We need to merge these files by phenotype. To do this we can run merger script.
+
+```bash
+bash scripts/07_merge_regenie_outputs.sh
+
+```
+
 
   * * * * *
 
