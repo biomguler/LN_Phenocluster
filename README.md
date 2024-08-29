@@ -201,7 +201,7 @@ bsub < scripts/12_permuteTraitsCLI.bsub -R "rusage[mem=200G]"
 ```
 
 To fit GEVD and claculate P value:
-Note: 
+Note: Script 14_compute_pvalue.bsub uses **13_fit_gevd_compute_pvalue.R**.
 ```bash
 bsub < scripts/14_compute_pvalue.bsub -R "rusage[mem=200G]"
 
