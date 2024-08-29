@@ -1,10 +1,10 @@
 #!/bin/bash
-#BSUB -q long                           #Set you submission
-#BSUB -J computeGPSCLI[1-15]            #Name of the job
-#BSUB -n 1                              #Request a core
-#BSUB -R "rusage[mem=200GB]"            #Request memory
-#BSUB -o /your/out/dir/LN_cluster.out   #Give path for the out file
-#BSUB -e /your/err/dir/LN_cluster.err   #Give path for the err file
+#BSUB -q long                                    #Set you submission
+#BSUB -J computeGPSCLI[1-15]                     #Name of the job
+#BSUB -n 16                                      #Request a core
+#BSUB -R "rusage[mem=200GB]"                     #Request memory
+#BSUB -o /your/out/dir/computeGpsCLI_%J_%I.out   #Give path for the out file
+#BSUB -e /your/err/dir/computeGpsCLI_%J_%I.err   #Give path for the err file
 
 module load boost/1.64.0 cmake/3.21.0 gcc/11.1.0
 

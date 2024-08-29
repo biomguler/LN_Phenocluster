@@ -1,0 +1,33 @@
+#!/bin/bash
+#BSUB -q highmem                                    #Set you submission
+#BSUB -J permuteTraitsCLI[1-225]                    #Name of the job
+#BSUB -n 32                                         #Request a core
+#BSUB -R "rusage[mem=128GB]"                        #Request memory
+#BSUB -o /your/out/dir/permuteTraitsCLI_%J_%I.out   #Give path for the out file
+#BSUB -e /your/err/dir/permuteTraitsCLI_%J_%I.err   #Give path for the err file
+
+module load boost/1.64.0 cmake/3.21.0 gcc/11.1.0
+
+# Set your dir
+cd /your/dir/gps/gps_cpp/build/apps
+
+# Main code
+phenotypes=("Cell_B" "Cell_P" "CLL" "DLBCL" "Drug_G1" "FL" "HL" "LM" "LPL_WM" "MGUS" "MM_MGUS" "MM" "MZL" "Soma_G1" "Soma_G2")
+
+# Calculate number of phenotypes
+num_phenotypes=${#phenotypes[@]}
+  
+  # Calculate phenotype combination index
+  combination_index=$((LSB_JOBINDEX - 1))
+  
+  # Calculate phenotype index pair from combination index
+  pheno_index1=$((combination_index / num_phenotypes))
+  pheno_index2=$((combination_index % num_phenotypes))
+  
+  # Get phenotype names
+  pheno1=${phenotypes[$pheno_index1]}
+  pheno2=${phenotypes[$pheno_index2]}
+  
+  # Perform permutation
+  ./permuteTraitsCLI -i input.txt -o "permuteTraitsCLI_${pheno1}_${pheno2}.txt" -a "$pheno1" -b "$pheno2" -d 1000 -n 32
+  
