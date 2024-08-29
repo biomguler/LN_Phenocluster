@@ -145,16 +145,21 @@ List of script and their functions for the step2:
 
   * * * * *
 
-#### 3) ASSET
+#### 3) ASSET and Meta-analysis with METAL
 
 As a hypothesis-free approach to identify pleiotropic variants, we conduct Association analysis based on SubSETs approach called ASSET [7]. ASSET is a collection of statistical methods tailored to combine association signals from multiple studies or traits, particularly when effects are present in only some studies and may be in opposite directions. The tool searches through all potential subsets of studies, adjusts for multiple testing, and identifies the most significant subset contributing to the overall association, accounting for correlations due to overlapping participants. We ran ASSET analysis with a custom R script which enables to compute the test parallel computation. 
 
 ```r
 Rscript --slave --no-restore --no-save scripts/09_asset_parallel.R
 ```
+To compare ASSET, phenocluster and traditional meta-analysis we ran meta-analysis with METAL. Because we have 7 phenocluster, we create seven script for METAL, 10_s_metalLM(**1-7**).sh, and we run all this script with **10_Metal.bsub**.
 
+```bash
+bsub < scripts/10_Metal.bsub -R "rusage[mem=8G]"
 
-#### 4) Meta-analysis with METAL
+```
+
+#### 4) 
 
   will be described here full!!
 
