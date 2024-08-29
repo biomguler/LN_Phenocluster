@@ -1,0 +1,38 @@
+#!/bin/bash
+#BSUB -q long
+#BSUB -J computeGpsCLI_2[1-15]
+#BSUB -R "rusage[mem=200GB]"  #Request 10000MB per core for the job
+#BSUB -o /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files/computeGpsCLI_2_%J_%I.out
+#BSUB -e /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files/computeGpsCLI_2_%J_%I.err
+#BSUB -M 200GB                #Set the per process enforceable memory limit to 80000MB.
+
+module load boost/1.64.0 cmake/3.21.0 gcc/11.1.0
+
+# location of gps
+cd /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/asset/gps/gps_cpp/build/apps
+
+# main code
+phenotypes=("Cell_B" "Cell_P" "CLL" "DLBCL" "Drug_G1" "FL" "HL" "LM" "LPL_WM" "MGUS" "MM_MGUS" "MM" "MZL" "Soma_G1" "Soma_G2")
+
+
+
+pheno1=Cell_B
+pheno2=Cell_P
+pheno3=CLL
+pheno4=DLBCL
+pheno5=Drug_G1
+pheno6=FL
+pheno7=HL
+pheno8=LM
+pheno9=LPL_WM
+pheno10=MGUS
+pheno11=MM_MGUS
+pheno12=MM
+pheno13=MZL
+pheno14=Soma_G1
+pheno15=Soma_G2
+
+combined=pheno${LSB_JOBINDEX}
+
+
+./computeGpsCLI -i input_proxy.txt -o "computeGpsCLI_${!combined}_${!combined}.txt" -a "${!combined}" -b "${!combined}_proxy" -c "${!combined}" -d "${!combined}_proxy"
