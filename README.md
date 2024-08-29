@@ -147,7 +147,12 @@ List of script and their functions for the step2:
 
 #### 3) ASSET
 
-  will be described here full!!
+As a hypothesis-free approach to identify pleiotropic variants, we conduct Association analysis based on SubSETs approach called ASSET [7]. ASSET is a collection of statistical methods tailored to combine association signals from multiple studies or traits, particularly when effects are present in only some studies and may be in opposite directions. The tool searches through all potential subsets of studies, adjusts for multiple testing, and identifies the most significant subset contributing to the overall association, accounting for correlations due to overlapping participants. We ran ASSET analysis with a custom R script which enables to compute the test parallel computation. 
+
+```r
+Rscript --slave --no-restore --no-save scripts/09_asset_parallel.R
+```
+
 
 #### 4) Meta-analysis with METAL
 
