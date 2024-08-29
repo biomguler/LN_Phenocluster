@@ -177,7 +177,10 @@ List of script and their functions for the step3:
 
 To understand genetic correlation between LN subtypes and created phenocluster, we first performed linkage disequilibrium score regression (LDSC) by using LDSC v1.0.1 software. The GWAS summary statistics of LN subtypes and phenoclusters were formatted with munge_sumstats python script from LDSC to estimate genetic correlation with HapMap3 variants as recommended. For genetic correlation estimation, SNPs were excluded if the MAF was smaller than 5% and the MHC region (chr6: 25-35 Mb) was excluded from this analysis. The pre-computed linkage disequilibrium (LD) scores for European ancestry were downloaded from the Alkes Group website (https://console.cloud.google.com/storage/browser/broad-alkesgroup-public-requester-pays/).
 
-
+1) GWASlab to format sumstats
+2) LDSC munge to format
+3) LDSC
+4) Combine results
 
 
 
@@ -190,22 +193,30 @@ Recently, the GPS was enhanced by fitting it with a generalized extreme value di
 
 To compute GPS:
 ```bash
-bsub < scripts/11_computeGPScli.bsub -R "rusage[mem=200G]"
+bsub < scripts/15_computeGPScli.bsub -R "rusage[mem=200G]"
 
 ```
 
 To permute GPS:
 ```bash
-bsub < scripts/12_permuteTraitsCLI.bsub -R "rusage[mem=200G]"
+bsub < scripts/16_permuteTraitsCLI.bsub -R "rusage[mem=200G]"
 
 ```
 
 To fit GEVD and claculate P value:
-Note: Script 14_compute_pvalue.bsub uses **13_fit_gevd_compute_pvalue.R**.
+Note: Script 18_compute_pvalue.bsub uses **17_fit_gevd_compute_pvalue.R**.
 ```bash
-bsub < scripts/14_compute_pvalue.bsub -R "rusage[mem=200G]"
+bsub < scripts/18_compute_pvalue.bsub -R "rusage[mem=200G]"
 
 ```
+
+| **Script** | **Function** |
+| --- | --- |
+| 09 | [Parallel ASSET](scripts/09_asset_parallel.R) |
+| 10 | [Meta-analysis with METAL](scripts/10_Metal.bsub) || **Script** | **Function** |
+| --- | --- |
+| 09 | [Parallel ASSET](scripts/09_asset_parallel.R) |
+| 10 | [Meta-analysis with METAL](scripts/10_Metal.bsub) |
 
 
 #### 5) Create FUMA inputs
