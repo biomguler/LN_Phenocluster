@@ -134,7 +134,7 @@ List of script and their functions for the step2:
 
 | **Script** | **Function** |
 | --- | --- |
-| 04 | [QC genotype for regenie step1 ](scripts/04_qc.sh) |
+| 04 | [QC genotype for regenie step1](scripts/04_qc.sh) |
 | 05 | [REGENIE STEP1](scripts/05_regenie_step1.bsub) |
 | 06 | [REGENIE STEP2](scripts/06_regenie_step2.bsub) |
 | 07 | [Merge REGENIE OUTPUTS](scripts/07_merge_regenie_outputs.sh) |
@@ -159,23 +159,30 @@ bsub < scripts/10_Metal.bsub -R "rusage[mem=8G]"
 
 ```
 
-#### 4) 
+List of script and their functions for the step3:
+
+| **Script** | **Function** |
+| --- | --- |
+| 09 | [Parallel ASSET](scripts/09_asset_parallel.R) |
+| 10 | [Meta-analysis with METAL](scripts/10_Metal.bsub) |
+
+</p>
+
+
+
+#### 4) GPS-GEV Test
 
   will be described here full!!
 
-#### 5) GPS-GEV Test
+#### 5) Create FUMA inputs
 
   will be described here full!!
 
-#### 6) Create FUMA inputs
+#### 6) Additional: LDSC
 
   will be described here full!!
 
-#### 7) Additional: LDSC
-
-  will be described here full!!
-
-#### 8) Plots
+#### 7) Plots
 
   will be described here full!!
 
