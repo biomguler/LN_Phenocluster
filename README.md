@@ -18,6 +18,7 @@ LN Phenocluster Manuscript Pipeline
 | plink2 | 2.00a3LM | [plink2](https://www.cog-genomics.org/plink/2.0/) |
 | gps_cpp | beta | [gps_cpp](https://github.com/twillis209/gps_cpp/tree/remove_po_dependency) |
 | R | 4.3.0 or above | [R](https://www.r-project.org/) |
+| METAL | 2020-05-05 | [METAL](https://github.com/statgen/METAL) |
 
 ### Required R Packages
 
