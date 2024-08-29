@@ -22,6 +22,7 @@ PROCESS	/LM_GWAS/DLBCL/DLBCL_out_A1FREQ0p001_info0p9.txt
 PROCESS	/LM_GWAS/FL/FL_out_A1FREQ0p001_info0p9.txt
 PROCESS	/LM_GWAS/HL/HL_out_A1FREQ0p001_info0p9.txt
 PROCESS	/LM_GWAS/MZL/MZL_out_A1FREQ0p001_info0p9.txt
+PROCESS	/LM_GWAS/LPL_WM/LPL_WM_out_A1FREQ0p001_info0p9.txt
 
 #for the final meta-analysis of all 8 samples only output results if the
 
