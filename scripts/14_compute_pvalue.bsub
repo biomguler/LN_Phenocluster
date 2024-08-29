@@ -1,0 +1,36 @@
+#!/bin/bash
+#BSUB -q long                                      #Set you submission
+#BSUB -J computeGps_pvalue[1-225]                  #Name of the job
+#BSUB -R "rusage[mem=20GB]"                        #Request memory
+#BSUB -o /your/out/dir/computeGps_pvalue_%J_%I.out #Give path for the out file
+#BSUB -e /your/out/dir/computeGps_pvalue_%J_%I.err #Give path for the out file
+
+# Modules
+module load R/4.3.0
+
+# Set your dir
+cd /your/dir/gps/gps_cpp/build/apps
+
+# Main code
+phenotypes=("Cell_B" "Cell_P" "CLL" "DLBCL" "Drug_G1" "FL" "HL" "LM" "LPL_WM" "MGUS" "MM_MGUS" "MM" "MZL" "Soma_G1" "Soma_G2")
+
+# Calculate number of phenotypes
+num_phenotypes=${#phenotypes[@]}
+  
+  # Calculate phenotype combination index
+  combination_index=$((LSB_JOBINDEX - 1))
+  
+  # Calculate phenotype index pair from combination index
+  pheno_index1=$((combination_index / num_phenotypes))
+  pheno_index2=$((combination_index % num_phenotypes))
+  
+  # Get phenotype names
+  pheno1=${phenotypes[$pheno_index1]}
+  pheno2=${phenotypes[$pheno_index2]}
+  
+
+Rscript --vanilla 13_fit_gevd_compute_pvalue.R -g computeGpsCLI_${pheno1}_${pheno2}.txt -p 100_permuteTraitsCLI_${pheno1}_${pheno2}.txt -o gps_${pheno1}_${pheno2}_pvalue.txt
+
+#collect all results together
+cat gps_Cell_B_Cell_B_pvalue.txt | head -1 > gps_results.txt
+find gps_*_pvalue.txt  -exec sh -c "cat {} | tail -n +2 -f " \; >> gps_results.txt
