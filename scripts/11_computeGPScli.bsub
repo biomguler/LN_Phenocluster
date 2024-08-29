@@ -1,15 +1,15 @@
 #!/bin/bash
-#BSUB -q long
-#BSUB -J computeGpsCLI_2[1-15]
-#BSUB -R "rusage[mem=200GB]"  #Request 10000MB per core for the job
-#BSUB -o /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files/computeGpsCLI_2_%J_%I.out
-#BSUB -e /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files/computeGpsCLI_2_%J_%I.err
-#BSUB -M 200GB                #Set the per process enforceable memory limit to 80000MB.
+#BSUB -q long                           #Set you submission
+#BSUB -J computeGPSCLI[1-15]            #Name of the job
+#BSUB -n 1                              #Request a core
+#BSUB -R "rusage[mem=200GB]"            #Request memory
+#BSUB -o /your/out/dir/LN_cluster.out   #Give path for the out file
+#BSUB -e /your/err/dir/LN_cluster.err   #Give path for the err file
 
 module load boost/1.64.0 cmake/3.21.0 gcc/11.1.0
 
-# location of gps
-cd /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/asset/gps/gps_cpp/build/apps
+# Set your dir
+cd /your/dir/gps/gps_cpp/build/apps
 
 # main code
 phenotypes=("Cell_B" "Cell_P" "CLL" "DLBCL" "Drug_G1" "FL" "HL" "LM" "LPL_WM" "MGUS" "MM_MGUS" "MM" "MZL" "Soma_G1" "Soma_G2")
@@ -34,5 +34,6 @@ pheno15=Soma_G2
 
 combined=pheno${LSB_JOBINDEX}
 
-
-./computeGpsCLI -i input_proxy.txt -o "computeGpsCLI_${!combined}_${!combined}.txt" -a "${!combined}" -b "${!combined}_proxy" -c "${!combined}" -d "${!combined}_proxy"
+for i in "${phenotypes[@]}"; do
+./computeGpsCLI -i input.txt -o "computeGpsCLI_${!combined}_${i}.txt" -a "${!combined}" -b "${i}" -c "${!combined}" -d "${i}"
+done
