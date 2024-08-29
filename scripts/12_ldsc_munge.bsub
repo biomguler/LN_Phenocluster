@@ -1,0 +1,117 @@
+#!/bin/bash
+#BSUB -q long
+#BSUB -J ldsc_munge[1-30]
+#BSUB -n 4                  #Request 4 cores
+#BSUB -R "span[ptile=4]"    #Request 8 cores per node.
+#BSUB -R "rusage[mem=8GB]"  #Request 10000MB per core for the job
+#BSUB -o /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files/ldsc_munge_%J_%I.out
+#BSUB -e /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files/ldsc_munge_%J_%I.err
+#BSUB -M 200GB                #Set the per process enforceable memory limit to 80000MB.
+
+#this script creates ldsc_munge:sumstats output
+
+#Load modules
+module load anaconda3/2021.05
+
+#set env
+source /home/m112r/.bashrc
+conda activate /home/m112r/.conda/envs/ldsc
+#phenotypes
+pheno1=Cell_B
+pheno2=Cell_P
+pheno3=CLL
+pheno4=DLBCL
+pheno5=Drug_G1
+pheno6=FL
+pheno7=HL
+pheno8=LM
+pheno9=LPL_WM
+pheno10=MGUS
+pheno11=MM_MGUS
+pheno12=MM
+pheno13=MZL
+pheno14=Soma_G1
+pheno15=Soma_G2
+pheno16=BAS
+pheno17=EOS
+pheno18=HCT
+pheno19=HGB
+pheno20=LYM
+pheno21=MCHC
+pheno22=MCH
+pheno23=MCV
+pheno24=MON
+pheno25=MPV
+pheno26=NEU
+pheno27=PLT
+pheno28=RBC
+pheno29=RDW
+pheno30=WBC
+
+#paths for sumstat files
+path0=/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/
+path00=/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/asset/
+path1=${path0}${pheno1}
+path2=${path0}${pheno2}
+path3=${path0}${pheno3}
+path4=${path0}${pheno4}
+path5=${path0}${pheno5}
+path6=${path0}${pheno6}
+path7=${path0}${pheno7}
+path8=${path0}${pheno8}
+path9=${path0}${pheno9}
+path10=${path0}${pheno10}
+path11=${path0}${pheno11}
+path12=${path0}${pheno12}
+path13=${path0}${pheno13}
+path14=${path0}${pheno14}
+path15=${path0}${pheno15}
+path16=${path00}
+path17=${path00}
+path18=${path00}
+path19=${path00}
+path20=${path00}
+path21=${path00}
+path22=${path00}
+path23=${path00}
+path24=${path00}
+path25=${path00}
+path26=${path00}
+path27=${path00}
+path28=${path00}
+path29=${path00}
+path30=${path00}
+
+
+# array job var
+combined1=path${LSB_JOBINDEX}
+combined2=pheno${LSB_JOBINDEX}
+
+cd ${!combined1}
+
+
+
+
+# example input: Cell_B_ldsc.ldsc.tsv.gz
+# col.names: CHR     POS     A1      A2      Frq     Beta    Z       P       OR      INFO    N       SNP
+
+# example input:BAS_ldsc.ldsc.tsv.gz
+# col.names: CHR     POS     A1      A2      Frq     Beta    Z       P       OR      N       SNP
+
+############### munge_sumstats ############################
+
+python /home/m112r/ldsc/munge_sumstats.py \
+--sumstats ${!combined2}_ldsc.ldsc.tsv.gz \
+--chunksize 500000 \
+--merge-alleles /home/m112r/ldsc/w_hm3.noMHC.snplist \
+--maf-min 0.05 \
+--frq Frq \
+--snp SNP \
+--N-col N \
+--a1 A1 \
+--a2 A2 \
+--p P \
+--signed-sumstats Z,0 \
+--ignore "Beta,OR" \
+--out ${!combined1}/${!combined2}_maf0p005_noMHC_munge.sumstats
+
