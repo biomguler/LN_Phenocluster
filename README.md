@@ -56,14 +56,14 @@ After running **00_Compare_hclust_method.R** script, the selected hclust method 
 
 Finaly, to run these scripts please run code below:
 
-```console
+```
 Rscript --slave --no-restore --no-save scripts/00_compare_hclust_methods.R
 Rscript --slave --no-restore --no-save scripts/01_phenocluster.R
 ```
 You can run these two one-line codes in you R terminal (**not console**), and if you have access to any HPC, you can push these script with a job runner script. The script **03_LNcluster.bsub** is created for IBM LSF job scheduler.
 But, this script easly can be converted to commonly used scheduler such as SLURM or PBS. In pipeline all runner scripts were created for LSF and as an example how to convert this scripts to SLURM or any other platform an example code snippet for SLURM given in below:
 
-```bash
+```
 #!/bin/bash
 #SBATCH --partition=long                    # Set your partition
 #SBATCH --job-name=LNcluster                # Name of the job
@@ -244,7 +244,9 @@ bsub < scripts/18_compute_pvalue.bsub -R "rusage[mem=200G]"
 
 #### 5) Create FUMA inputs
 
-FUMA requests certain GWAs summary statistics format and less than 600Mb size. To achive this, we used different custom R scripts for Regenie, METAL and ASSET GWAS summary statistics.
+FUMA requests certain GWAs summary statistics format and less than 600Mb size. To achive this, we used different custom R scripts for Regenie, METAL and ASSET GWAS summary statistics. 
+
+After FUMA results for each GWAS summary statistics, results need to be combined and summurized the script **22_fuma2functional.R** used for this purpose.
 
 a) Regenie to FUMA
 
@@ -264,11 +266,30 @@ c) ASSET to FUMA
 Rscript --slave --no-restore --no-save scripts/21_asset2fuma.R
 ```
 
+d) FUMA to summary functional tables
+
+```
+Rscript --slave --no-restore --no-save scripts/22_fuma2functional.R
+```
+
+
+
 #### 7) Plots
+The result of GPS-GEV and LDSC plotted rogether with using custom R script.
 
-  -GPS_LDSC corrplot
-  -Forest plot
+a) To generate corrplot for GPS-GEV and LDSC
 
+```
+Rscript --slave --no-restore --no-save scripts/23_gps_corrplot.R
+```
+
+b) To generate custom forest plots
+
+Note: The script is adsapted from Katherine Hoffman's blogpage. The [source](https://www.khstats.com/blog/forest-plots/#just-the-code) (the last accessed date: 30/08/2024).
+
+```
+Rscript --slave --no-restore --no-save scripts/24_forest_plot.R
+```
 
 * * * * *
 
