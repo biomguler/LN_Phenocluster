@@ -20,7 +20,7 @@ LN Phenocluster Manuscript Pipeline
 | R | 4.3.0 or above | [R](https://www.r-project.org/) |
 | METAL | 2020-05-05 | [METAL](https://github.com/statgen/METAL) |
 | LDSC | v1.0.1 | [LDSC](https://github.com/bulik/ldsc) |
-
+| GWASLab | v3.4.31 | [GWASLab](https://github.com/Cloufield/gwaslab) |
 
 ### Required R Packages
 
