@@ -168,9 +168,13 @@ List of script and their functions for the Step 3:
 | 09 | [Parallel ASSET](scripts/09_asset_parallel.R) |
 | 10 | [Meta-analysis with METAL](scripts/10_Metal.bsub) |
 
+</p>
+
+* * * * *
+
 #### 4) GPS-GEV Test and LDSC
 
-To understand genetic correlation between LN subtypes and created phenocluster, we first performed linkage disequilibrium score regression (LDSC) by using LDSC v1.0.1 software. The GWAS summary statistics of LN subtypes and phenoclusters were formatted with munge_sumstats python script from LDSC to estimate genetic correlation with HapMap3 variants as recommended. For genetic correlation estimation, SNPs were excluded if the MAF was smaller than 5% and the MHC region (chr6: 25-35 Mb) was excluded from this analysis. The pre-computed linkage disequilibrium (LD) scores for European ancestry were downloaded from the Alkes Group website (https://console.cloud.google.com/storage/browser/broad-alkesgroup-public-requester-pays/).
+To understand the genetic correlation between LN subtypes and the created phenoclusters, we first performed linkage disequilibrium score regression (LDSC) using LDSC v1.0.1 software. The GWAS summary statistics for LN subtypes and phenoclusters were formatted using the munge_sumstats Python script from LDSC to estimate genetic correlation with HapMap3 variants, as recommended. For the genetic correlation estimation, SNPs with a minor allele frequency (MAF) of less than 5% were excluded, and the MHC region (chr6: 25-35 Mb) was also excluded from this analysis. We downloaded the pre-computed linkage disequilibrium (LD) scores for European ancestry from the Alkes Group website [here](https://console.cloud.google.com/storage/browser/broad-alkesgroup-public-requester-pays/).
 
 a) GWASlab to format sumstats
 
@@ -199,8 +203,9 @@ d) Combine results
 bash 14_combine_ldsc_results.sh
 ```
 
-Because our effective sample size [Neff=4 /(1/Ncases+1/Ncontrols)] was relatively small, the majority of pairwise correlation tests failed. Therefore, we used an alternative method called the genome-wide pairwise-association signal sharing (GPS) test [9]. As a non-parametric test, the test does not provide quantitative measurement of correlation like LDSC, but provides pairwise independence. Instead it is only evidence against a null hypothesis of bivariate independence. 
-Recently, the GPS was enhanced by fitting it with a generalized extreme value distribution instead of using the standard exponential transformation as initially proposed. We used GPS-GEV test. We only removed the MHC region (chr6 29624758-33170276). We used computeGpsCLI application to compute the GPS test statistic for P values from a pair of GWAS and permuteTraitsCLI application used to generate null realizations of the GPS test statistic with 100 permutation. Finally, P values GPS statistic obtained with fit_gevd_and_compute_pvalue.R script which fits a generalized extreme value distribution (GEVD) to null realizations of the GPS statistic and reports a P value.
+Due to our relatively small effective sample size (Neff = 4 / (1/Ncases + 1/Ncontrols)), most pairwise correlation tests failed. Therefore, we employed an alternative method called the genome-wide pairwise-association signal sharing (GPS) test [9]. While the GPS test does not provide a quantitative measurement of correlation like LDSC, it does offer evidence against the null hypothesis of bivariate independence.
+
+Recently, the GPS was enhanced by fitting it with a generalized extreme value distribution (GEVD) instead of using the standard exponential transformation as initially proposed. We used the GPS-GEV test, excluding only the MHC region (chr6: 29,624,758-33,170,276). The GPS test statistic for P values from a pair of GWAS was computed using the computeGpsCLI application, and permuteTraitsCLI was used to generate null realizations of the GPS test statistic with 100 permutations. Finally, P values for the GPS statistic were obtained using the fit_gevd_and_compute_pvalue.R script, which fits a generalized extreme value distribution (GEVD) to the null realizations of the GPS statistic and reports a P value.
 
 a) To compute GPS:
 ```bash
@@ -234,14 +239,19 @@ bsub < scripts/18_compute_pvalue.bsub -R "rusage[mem=200G]"
 | 17 | [Fit GEV-Pvalue R script ](scripts/17_fit_gevd_compute_pvalue.R) |
 | 18 | [Runner for script 17](scripts/18_compute_pvalue.bsub) |
 
+</p>
 
+* * * * *
 
 
 #### 5) Create FUMA inputs
 
-FUMA requests certain GWAs summary statistics format and less than 600Mb size. To achive this, we used different custom R scripts for Regenie, METAL and ASSET GWAS summary statistics. 
+FUMA requires GWAS summary statistics to be in a specific format and under 600 MB in size. To meet these requirements, we utilized different custom R scripts tailored for Regenie, METAL, and ASSET GWAS summary statistics.
 
-After FUMA results for each GWAS summary statistics, results need to be combined and summurized the script **22_fuma2functional.R** used for this purpose.
+After obtaining the FUMA results for each set of GWAS summary statistics, the results need to be combined and summarized. This was accomplished using the script **22_fuma2functional.R**.
+
+Steps to Prepare FUMA Inputs:
+
 
 a) Regenie to FUMA
 
@@ -267,10 +277,22 @@ d) FUMA to summary functional tables
 Rscript --slave --no-restore --no-save scripts/22_fuma2functional.R
 ```
 
+| **Script** | **Function** |
+| --- | --- |
+| 19 | [REGENIE2FUMA](scripts/19_regenie2fuma_input.R) |
+| 20 | [METAL2FUMA](scripts/20_metal2fuma.R |
+| 21 | [ASSET2FUMA](scripts/21_asset2fuma.R) |
+| 22 | [FUMA2FUNC](scripts/22_fuma2functional.R) |
+
+</p>
+
+* * * * *
 
 
-#### 7) Plots
-The result of GPS-GEV and LDSC plotted rogether with using custom R script.
+#### 6) Plots
+The results from the GPS-GEV test and LDSC were visualized using custom R scripts.
+
+Steps to Generate Plots:
 
 a) To generate corrplot for GPS-GEV and LDSC
 
@@ -280,25 +302,33 @@ Rscript --slave --no-restore --no-save scripts/23_gps_corrplot.R
 
 b) To generate custom forest plots
 
-Note: The script is adsapted from Katherine Hoffman's blogpage. The [source](https://www.khstats.com/blog/forest-plots/#just-the-code) (the last accessed date: 30/08/2024).
+Note: The script was adapted from Katherine Hoffman's blog. The [source](https://www.khstats.com/blog/forest-plots/#just-the-code) was last accessed on 30/08/2024.
 
 ```
 Rscript --slave --no-restore --no-save scripts/24_forest_plot.R
 ```
 
+
+| **Script** | **Function** |
+| --- | --- |
+| 23 | [GPS_LDSC Corrplot](scripts/23_gps_corrplot.R) |
+| 24 | [Forest plot](scripts/24_forest_plot.R) |
+
+</p>
+
 * * * * *
 
 > [!NOTE]
-> This repository is created to enhance reproduciblity. It will not actively maintained.
+> This repository is created to enhance reproducibility. It will not be actively maintained.
 
 > [!TIP]
-> If you need any help at any step please send me an [email](mailto:murat.guler@dkfz.de).
+> If you need assistance at any step, please feel free to [email](mailto:murat.guler@dkfz.de) me.
 
 > [!IMPORTANT]
-> It is impossible to share full data sets that are used in the pipeline like UKBB data and some steps need manual check and create data files.
+>  It is not possible to share the full datasets used in this pipeline, such as UKBB data. Additionally, some steps require manual verification and the creation of data files.
 
 > [!WARNING]
-> The pipeline or any part of work can not use medical/diagnostic proposes.
+> This pipeline, or any part of it, should not be used for medical or diagnostic purposes.
 
 > [!CAUTION]
-> If you use any part of this pipeline in your work please cite our orginal work!
+> If you use any part of this pipeline in your work, please make sure to cite the original work software/package and if possible our work.
