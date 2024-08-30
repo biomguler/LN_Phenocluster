@@ -3,7 +3,7 @@
 #BSUB -J gwaslab_ldsc[1-15]
 #BSUB -n 16                  #Request 64 cores
 #BSUB -R "span[ptile=8]"    #Request 8 cores per node.
-#BSUB -R "rusage[mem=200GB]"  #Request 10000MB per core for the job
+#BSUB -R "rusage[mem=16GB]"  #Request 10000MB per core for the job
 #BSUB -o /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files/gwaslab_%J_%I.out
 #BSUB -e /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files/gwaslab_%J_%I.err
 #BSUB -M 200GB                #Set the per process enforceable memory limit to 80000MB.
