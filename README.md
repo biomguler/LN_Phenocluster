@@ -152,7 +152,7 @@ List of script and their functions for the step2:
 
 As a hypothesis-free approach to identify pleiotropic variants, we conduct Association analysis based on SubSETs approach called ASSET [7]. ASSET is a collection of statistical methods tailored to combine association signals from multiple studies or traits, particularly when effects are present in only some studies and may be in opposite directions. The tool searches through all potential subsets of studies, adjusts for multiple testing, and identifies the most significant subset contributing to the overall association, accounting for correlations due to overlapping participants. We ran ASSET analysis with a custom R script which enables to compute the test parallel computation. 
 
-```console
+```
 Rscript --slave --no-restore --no-save scripts/09_asset_parallel.R
 ```
 To compare ASSET, phenocluster and traditional meta-analysis we ran meta-analysis with METAL. Because we have 7 phenocluster, we create seven script for METAL, 10_s_metalLM(**1-7**).sh, and we run all this script with **10_Metal.bsub**.
@@ -244,8 +244,25 @@ bsub < scripts/18_compute_pvalue.bsub -R "rusage[mem=200G]"
 
 #### 5) Create FUMA inputs
 
-  will be described here full!!
+FUMA requests certain GWAs summary statistics format and less than 600Mb size. To achive this, we used different custom R scripts for Regenie, METAL and ASSET GWAS summary statistics.
 
+a) Regenie to FUMA
+
+```
+Rscript --slave --no-restore --no-save scripts/19_regenie2fuma_input.R
+```
+
+b) METAL to FUMA
+
+```
+Rscript --slave --no-restore --no-save scripts/20_metal2fuma.R
+```
+
+c) ASSET to FUMA
+
+```
+Rscript --slave --no-restore --no-save scripts/21_asset2fuma.R
+```
 
 #### 7) Plots
 
