@@ -41,11 +41,11 @@ LN Phenocluster Manuscript Pipeline
 
 #### 1) Create phenoclusters
 
-The data for somatic mutation patterns (SData1.txt) and approved drugs (SData2.txt) were accessed on cBioPortal and the Open Targets Platform, respectively.
-
-For the approved drugs, each phenotype was searched on the Open Targets platform, and each drug (at least phase 3 & 4) was manually searched on public databases to check FDA or EMA approval for clinical usage. The LN subtypes-drug binary matrix (0,1) was created based on this information, and the data folder created LN-drug matrix provided as ***SData2.txt***.
+The data for somatic mutation patterns (SData1.txt) and approved drugs (SData2.txt) were accessed on [cBioPortal](https://www.cbioportal.org/) and the [Open Targets Platform](https://platform.opentargets.org/), respectively.
 
 For somatic mutations, each LN phenotype and somatically mutated genes were downloaded from cBioPortal. The LN subtypes-mutated gene binary matrix (0,1) was created based on detected mutated genes without their frequency or position, and the data folder created LN-mutated genes matrix provided as ***SData1.txt***.
+
+For the approved drugs, each phenotype was searched on the Open Targets platform, and each drug (at least phase 3 & 4) was manually searched on public databases to check FDA or EMA approval for clinical usage. The LN subtypes-drug binary matrix (0,1) was created based on this information, and the data folder created LN-drug matrix provided as ***SData2.txt***.
 
 After creating these two data files, hierarchical clustering (hclust) analysis methods were compared using the **00_Compare_hclust_method.R** script. The script compares hierarchical clustering (hclust) algorithms by generating correlation plots and calculating the Fowlkes-Mallows Index. The resulting dendrograms are analyzed for cophenetic correlation (Pearson correlation coefficient) and Fowlkes-Mallows Index for different cluster counts (k=3, 4, 5). Finally, the script visualizes these correlations using correlation plots saved as TIFF images.
 
@@ -149,7 +149,7 @@ List of script and their functions for the Step 2:
 
 #### 3) ASSET and Meta-analysis with METAL
 
-To identify pleiotropic variants in a hypothesis-free manner, we conducted an Association analysis based on the SubSETs approach, called ASSET. ASSET is a collection of statistical methods designed to combine association signals from multiple studies or traits, especially when effects are present in only some studies and may be in opposite directions. This tool searches through all potential subsets of studies, adjusts for multiple testing, and identifies the most significant subset contributing to the overall association, while accounting for correlations due to overlapping participants. We ran the ASSET analysis using a custom R script, which enables parallel computation:
+To identify pleiotropic variants in a hypothesis-free manner, we conducted an 'Association analysis based on the SubSETs' approach, called ASSET. ASSET is a collection of statistical methods designed to combine association signals from multiple studies or traits, especially when effects are present in only some studies and may be in opposite directions. This tool searches through all potential subsets of studies, adjusts for multiple testing, and identifies the most significant subset contributing to the overall association, while accounting for correlations due to overlapping participants. We ran the ASSET analysis using a custom R script, which enables parallel computation:
 
 ```
 Rscript --slave --no-restore --no-save scripts/09_asset_parallel.R
