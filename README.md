@@ -3,9 +3,9 @@ LN Phenocluster Manuscript Pipeline
 
 **Project Name:** Lymphoid neoplasms (LN) phenocluster
 
-**Description:** This repository contains the scripts and pipeline used in the LN phenocluster manuscript. Please follow the scripts listed below to generate analysis results described in the manuscript.
+**Description:** This repository contains the scripts and pipeline used in the LN phenocluster manuscript. Please follow the scripts listed below to generate the analysis results described in the manuscript.
 
-**Citation:** "M. Guler & F. Canzian, Clustering Lymphoid Neoplasms by Somatic Mutation and Drug Usage Profiles: A Multi-trait Genome-wide Association Study, ***submitted***, 2024"
+**Citation:** "M. Guler & F. Canzian, Clustering of Lymphoid Neoplasms by Cell of Origin, Somatic Mutation and Drug Usage Profiles: A Multi-trait Genome-Wide Association Study, ***submitted***, 2024"
 
 * * * * *
 
@@ -41,27 +41,26 @@ LN Phenocluster Manuscript Pipeline
 
 #### 1) Create phenoclusters
 
-<p style="text-align: justify;"> The data for somatic mutation patterns (SData1.txt) and approved drugs (SData2.txt) were accessed on cBioPortal and the Open Targets Platform, respectively.
+The data for somatic mutation patterns (SData1.txt) and approved drugs (SData2.txt) were accessed on cBioPortal and the Open Targets Platform, respectively.
 
-For the approved drugs, each phenotype was searched on the Open Targets platform, and each drug (at least phase 3&4) was manually searched on public databases to check FDA or EMA approval for clinical usage. The LN subtypes-drug binary matrix (0,1) was created based on this information, and the data folder created LN-drug matrix provided as ***SData2.txt***.
+For the approved drugs, each phenotype was searched on the Open Targets platform, and each drug (at least phase 3 & 4) was manually searched on public databases to check FDA or EMA approval for clinical usage. The LN subtypes-drug binary matrix (0,1) was created based on this information, and the data folder created LN-drug matrix provided as ***SData2.txt***.
 
-For the somatic mutations, each LN phenotype and somatically mutated genes were downloaded from cBioPortal. The LN subtypes-mutated gene binary matrix (0,1) was created based on detected mutated genes without their frequency or position, and the data folder created LN-mutated genes matrix provided as ***SData1.txt***.
+For somatic mutations, each LN phenotype and somatically mutated genes were downloaded from cBioPortal. The LN subtypes-mutated gene binary matrix (0,1) was created based on detected mutated genes without their frequency or position, and the data folder created LN-mutated genes matrix provided as ***SData1.txt***.
 
-After creating this two data files, for each dataset, hierarchical clustering (hclust) analysis methods compared by using **00_Compare_hclust_method.R** script. The script aims to compare hierarchical clustering (hclust) algorithms by generating correlation plots and calculating the Fowlkes-Mallows Index. The resulting dendrograms are stored and analyzed for cophenetic correlation (Pearson correlation coefficient) and Fowlkes-Mallows Index for different cluster counts (k=3, 4, 5). Finally, the script visualizes these correlations using correlation plots saved as TIFF images, providing a comprehensive comparison of the clustering methods.
+After creating these two data files, hierarchical clustering (hclust) analysis methods were compared using the **00_Compare_hclust_method.R** script. The script compares hierarchical clustering (hclust) algorithms by generating correlation plots and calculating the Fowlkes-Mallows Index. The resulting dendrograms are analyzed for cophenetic correlation (Pearson correlation coefficient) and Fowlkes-Mallows Index for different cluster counts (k=3, 4, 5). Finally, the script visualizes these correlations using correlation plots saved as TIFF images.
 
 > [!NOTE]
 > For somatic mutation data method comparison done with nearly 10 000 genes that are mutated in more than 20% of subtypes becuase of computational restrictions. But, in the next step whole data set used.
 
-After running **00_Compare_hclust_method.R** script, the selected hclust method used in **01_LNcluster.R** script to generate and visualize phenocluster. The script creates dendrograms by using Ward's method and the Jaccard similarity coefficient (in R dist(method = "binary")). The dendrograms are then used to create heatmaps (heatmap.2 from gplots package) that visualize relationships between drugs or genes and LN subtypes. The resulting heatmaps are saved as TIFF images (drug_plot.tiff and somatic_plot.tiff).
+After running the **00_Compare_hclust_method.R** script, the selected hclust method is used in the **01_LNcluster.R** script to generate and visualize phenoclusters. The script creates dendrograms using Ward's method and the Jaccard similarity coefficient (in R dist(method = "binary")). The dendrograms are then used to create heatmaps (heatmap.2 from the gplots package) that visualize relationships between drugs or genes and LN subtypes. The resulting heatmaps are saved as TIFF images (drug_plot.tiff and somatic_plot.tiff).
 
-Finaly, to run these scripts please run code below:
+To run these scripts, use the following commands:
 
 ```
 Rscript --slave --no-restore --no-save scripts/00_compare_hclust_methods.R
 Rscript --slave --no-restore --no-save scripts/01_phenocluster.R
 ```
-You can run these two one-line codes in you R terminal (**not console**), and if you have access to any HPC, you can push these script with a job runner script. The script **03_LNcluster.bsub** is created for IBM LSF job scheduler.
-But, this script easly can be converted to commonly used scheduler such as SLURM or PBS. In pipeline all runner scripts were created for LSF and as an example how to convert this scripts to SLURM or any other platform an example code snippet for SLURM given in below:
+You can run these commands in your R terminal (not console). If you have access to any HPC, you can submit these scripts with a job runner script. The script 03_LNcluster.bsub is created for IBM LSF job scheduler. This script can easily be converted to commonly used schedulers such as SLURM or PBS. An example SLURM script is provided below:
 
 ```
 #!/bin/bash
@@ -84,7 +83,7 @@ Rscript --slave --no-restore --no-save scripts/01_phenocluster.R
 
 ```
 
-List of script and their functions for the step1:
+List of script and their functions for the Step 1:
 
 | **Script** | **Function** |
 | --- | --- |
@@ -98,42 +97,42 @@ List of script and their functions for the step1:
 
 #### 2) QC genetic data and GWAS with regenie
 
-REGENIE uses a two-step approach. In the first step, original non-imputed genotype data is used, filtering only high-quality genotyped variants: minor allele frequency (MAF) > 1%, minor allele count (MAC) > 5, genotyping rate >99%, Hardy-Weinberg equilibrium (HWE) test P > 1E−08, <1% missingness. The quality control of genotype data and filtering was done by using plink2 software. The script **04_qc.sh** combine all chromosemes and create list of SNPs which meet QC criteria. 
+REGENIE uses a two-step approach. In the first step, original non-imputed genotype data is used, filtering only high-quality genotyped variants: minor allele frequency (MAF) > 1%, minor allele count (MAC) > 5, genotyping rate > 99%, Hardy-Weinberg equilibrium (HWE) test P > 1E−08, <1% missingness. The quality control of genotype data and filtering was done using plink2 software. The script 04_qc.sh combines all chromosomes and creates a list of SNPs that meet QC criteria.
 
 ```bash
 bash scripts/04_qc.sh
 
 ```
 
-After the QC step, we can run REGENIE step 1.
+After the QC step, REGENIE step 1 can be run:
 
 ```bash
 bsub < scripts/05_regenie_step1.bsub -R "rusage[mem=32G]"
 
 ```
 
-The REGENIE step 1 will generate **ukb_step1_LM_pred.list** file and by using this and imputated genotype files (bgen), we can run step 2.
+REGENIE step 1 will generate a ukb_step1_LM_pred.list file. Using this file and imputed genotype files (bgen), step 2 can be run:
 
 ```bash
 bsub < scripts/06_regenie_step2.bsub -R "rusage[mem=32G]"
 
 ```
 
-The step 2, will generate GWAS results for each phenotype seperated by chromosomes. We need to merge these files by phenotype. To do this we can run merger script.
+Step 2 will generate GWAS results for each phenotype separated by chromosomes. These files need to be merged by phenotype. To do this, run the merger script:
 
 ```bash
 bash scripts/07_merge_regenie_outputs.sh
 
 ```
 
-Finally, we can filter and format the GWAS summary statistics. The script **08_filter_format_sumstats.bsub**, creates unique SNP ids (CHR:POS:REF:TEST), covert -log10P to P and filter Info_score and SPA correction failed tests. 
+Finally, GWAS summary statistics can be filtered and formatted. The script 08_filter_format_sumstats.bsub creates unique SNP IDs (CHR:POS:REF), converts -log10P to P, and filters Info_score and SPA correction failed tests.
 
 ```bash
 bsub < scripts/08_filter_format_sumstats.bsub -R "rusage[mem=32G]"
 
 ```
 
-List of script and their functions for the step2:
+List of script and their functions for the Step 2:
 
 | **Script** | **Function** |
 | --- | --- |
@@ -150,28 +149,24 @@ List of script and their functions for the step2:
 
 #### 3) ASSET and Meta-analysis with METAL
 
-As a hypothesis-free approach to identify pleiotropic variants, we conduct Association analysis based on SubSETs approach called ASSET [7]. ASSET is a collection of statistical methods tailored to combine association signals from multiple studies or traits, particularly when effects are present in only some studies and may be in opposite directions. The tool searches through all potential subsets of studies, adjusts for multiple testing, and identifies the most significant subset contributing to the overall association, accounting for correlations due to overlapping participants. We ran ASSET analysis with a custom R script which enables to compute the test parallel computation. 
+To identify pleiotropic variants in a hypothesis-free manner, we conducted an Association analysis based on the SubSETs approach, called ASSET. ASSET is a collection of statistical methods designed to combine association signals from multiple studies or traits, especially when effects are present in only some studies and may be in opposite directions. This tool searches through all potential subsets of studies, adjusts for multiple testing, and identifies the most significant subset contributing to the overall association, while accounting for correlations due to overlapping participants. We ran the ASSET analysis using a custom R script, which enables parallel computation:
 
 ```
 Rscript --slave --no-restore --no-save scripts/09_asset_parallel.R
 ```
-To compare ASSET, phenocluster and traditional meta-analysis we ran meta-analysis with METAL. Because we have 7 phenocluster, we create seven script for METAL, 10_s_metalLM(**1-7**).sh, and we run all this script with **10_Metal.bsub**.
+To compare the results from ASSET, phenocluster, and traditional meta-analysis, we performed a meta-analysis using METAL. Since we have seven phenoclusters, we created seven separate scripts for METAL (10_s_metalLM(1-7).sh), and executed all these scripts with 10_Metal.bsub:
 
 ```bash
 bsub < scripts/10_Metal.bsub -R "rusage[mem=8G]"
 
 ```
 
-List of script and their functions for the step3:
+List of script and their functions for the Step 3:
 
 | **Script** | **Function** |
 | --- | --- |
 | 09 | [Parallel ASSET](scripts/09_asset_parallel.R) |
 | 10 | [Meta-analysis with METAL](scripts/10_Metal.bsub) |
-
-</p>
-
-
 
 #### 4) GPS-GEV Test and LDSC
 
