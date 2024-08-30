@@ -244,12 +244,17 @@ bsub < scripts/18_compute_pvalue.bsub -R "rusage[mem=200G]"
 
 #### 5) Create FUMA inputs
 
-  will be described here full!!
+  1- regenie2fuma
+  2-metal2fuma
+  3- asset2fuma
+  4- fuma2functional
+  
 
 
 #### 7) Plots
 
-  will be described here full!!
+  -GPS_LDSC corrplot
+  -Forest plot
 
 
 * * * * *
