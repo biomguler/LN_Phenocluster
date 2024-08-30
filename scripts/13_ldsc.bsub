@@ -1,28 +1,27 @@
 #!/bin/bash
 #BSUB -q long
 #BSUB -J ldsc_binary_rg[1-15]
-#BSUB -n 1                  #Request 4 cores
-#BSUB -R "span[ptile=1]"    #Request 8 cores per node.
-#BSUB -R "rusage[mem=8GB]"  #Request 10000MB per core for the job
-#BSUB -o /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files/ldsc_binary_rg_%J_%I.out
-#BSUB -e /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/LM_files/ldsc_binary_rg_%J_%I.err
-#BSUB -M 200GB                #Set the per process enforceable memory limit to 80000MB.
+#BSUB -n 1
+#BSUB -R "span[ptile=1]"
+#BSUB -R "rusage[mem=8GB]"
+#BSUB -o /your/out/dir/ldsc_binary_rg_%J_%I.out
+#BSUB -e /your/err/dir/ldsc_binary_rg_%J_%I.err
 
-#this script creates ldsc_munge:sumstats output
 
-#Load modules
+# This script calculate ldsc
+# Load modules
 module load anaconda3/2021.05
 
-#set env
-source /home/m112r/.bashrc
-conda activate /home/m112r/.conda/envs/ldsc
+# Set env
+source /./.bashrc
+conda activate /./.conda/envs/ldsc
 
 # Find and sort the files
-file_paths=$(find /omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/asset/binary -type f -name '*ldsc*' -exec printf "%s\n" {} + | sort | tr '\n' ',' | sed 's/,$//')
+file_paths=$(find /./binary -type f -name '*ldsc*' -exec printf "%s\n" {} + | sort | tr '\n' ',' | sed 's/,$//')
 
 # Split the file paths into 10 chunks
-chunk_size=$(( $(echo $file_paths | tr -cd ',' | wc -c) / 10 + 1 ))  # Calculate chunk size
-chunks=($(echo $file_paths | tr ',' ' '))  # Convert comma-separated paths to array
+chunk_size=$(( $(echo $file_paths | tr -cd ',' | wc -c) / 10 + 1 ))  # calculate chunk size
+chunks=($(echo $file_paths | tr ',' ' '))  # convert comma-separated paths to array
 
 # Create 10 chunks
 for ((i=0; i<10; i++)); do
@@ -31,9 +30,6 @@ for ((i=0; i<10; i++)); do
     chunk_paths=$(IFS=, ; echo "${chunks[*]:$start:$chunk_size}")
     eval "file_paths$i=\"$chunk_paths\""
 done
-
-
-
 
 
 #target phenotypes
@@ -53,7 +49,7 @@ pheno13=MZL
 pheno14=Soma_G1
 pheno15=Soma_G2
 
-path0=/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/
+path0="/your/sumstat/dir/"
 path1=${path0}Cell_B
 path2=${path0}Cell_P
 path3=${path0}CLL
@@ -74,26 +70,17 @@ path15=${path0}Soma_G2
 combined1=path${LSB_JOBINDEX}
 combined2=pheno${LSB_JOBINDEX}
 
-# example input: NEU_maf0p005_noMHC_munge.sumstats.sumstats.gz
-# col.names: SNP     A1      A2      Z       N
-
-
 # example input:Cell_B_maf0p005_noMHC_munge.sumstats.sumstats.gz 
 # col.names: SNP     A1      A2      Z       N
 
 # Iterate through file paths variables and execute LDSC commands
 for i in {0..9}; do
     current_file_paths_var="file_paths$i"
-    output_prefix="/omics/groups/OE0136/internal/private/Murat/UKB/669373/Genomics/Genotypes/Genotype_Results/Genotype_calls/LM_GWAS/asset/${!combined2}_binary${i}_ldsc_rg"
+    output_prefix="/your/out/dir/${!combined2}_binary${i}_ldsc_rg"
 
-    python /home/m112r/ldsc/ldsc.py \
+    python /./ldsc/ldsc.py \
     --rg ${!combined1}/${!combined2}_maf0p005_noMHC_munge.sumstats.sumstats.gz,${!current_file_paths_var} \
-    --ref-ld-chr /home/m112r/ldsc/eur_w_ld_chr/ \
-    --w-ld-chr /home/m112r/ldsc/eur_w_ld_chr/ \
+    --ref-ld-chr /./ldsc/eur_w_ld_chr/ \
+    --w-ld-chr /./ldsc/eur_w_ld_chr/ \
     --out ${output_prefix}
 done
-
-
-#--samp-prev nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,0.00805388,0.003542266,0.002385534,0.002792732,0.010345722,0.00105223,0.00037837,0.011830375,0.000472062,0.000385577,0.003070204,0.002684627,0.000396388,0.001736899,0.007862893 \
-#--pop-prev nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,nan,0.00805388,0.003542266,0.002385534,0.002792732,0.010345722,0.00105223,0.00037837,0.011830375,0.000472062,0.000385577,0.003070204,0.007684627,0.000396388,0.001736899,0.007862893 \
-
