@@ -177,33 +177,49 @@ List of script and their functions for the step3:
 
 To understand genetic correlation between LN subtypes and created phenocluster, we first performed linkage disequilibrium score regression (LDSC) by using LDSC v1.0.1 software. The GWAS summary statistics of LN subtypes and phenoclusters were formatted with munge_sumstats python script from LDSC to estimate genetic correlation with HapMap3 variants as recommended. For genetic correlation estimation, SNPs were excluded if the MAF was smaller than 5% and the MHC region (chr6: 25-35 Mb) was excluded from this analysis. The pre-computed linkage disequilibrium (LD) scores for European ancestry were downloaded from the Alkes Group website (https://console.cloud.google.com/storage/browser/broad-alkesgroup-public-requester-pays/).
 
-1) GWASlab to format sumstats
-2) LDSC munge to format
-3) LDSC
-4) Combine results
+a) GWASlab to format sumstats
 
+```bash
+bsub < scripts/11_gwaslab_ldsc.bsub -R "rusage[mem=16G]"
 
+```
 
+b) LDSC munge to format
 
+```bash
+bsub < scripts/12_ldsc_munge.bsub -R "rusage[mem=8G]"
 
+```
 
+c) LDSC
+
+```bash
+bsub < scripts/13_ldsc.bsub -R "rusage[mem=8G]"
+
+```
+
+d) Combine results
+
+```bash
+bash 14_combine_ldsc_results.sh
+```
 
 Because our effective sample size [Neff=4 /(1/Ncases+1/Ncontrols)] was relatively small, the majority of pairwise correlation tests failed. Therefore, we used an alternative method called the genome-wide pairwise-association signal sharing (GPS) test [9]. As a non-parametric test, the test does not provide quantitative measurement of correlation like LDSC, but provides pairwise independence. Instead it is only evidence against a null hypothesis of bivariate independence. 
 Recently, the GPS was enhanced by fitting it with a generalized extreme value distribution instead of using the standard exponential transformation as initially proposed. We used GPS-GEV test. We only removed the MHC region (chr6 29624758-33170276). We used computeGpsCLI application to compute the GPS test statistic for P values from a pair of GWAS and permuteTraitsCLI application used to generate null realizations of the GPS test statistic with 100 permutation. Finally, P values GPS statistic obtained with fit_gevd_and_compute_pvalue.R script which fits a generalized extreme value distribution (GEVD) to null realizations of the GPS statistic and reports a P value.
 
-To compute GPS:
+a) To compute GPS:
 ```bash
 bsub < scripts/15_computeGPScli.bsub -R "rusage[mem=200G]"
 
 ```
 
-To permute GPS:
+b) To permute GPS:
 ```bash
 bsub < scripts/16_permuteTraitsCLI.bsub -R "rusage[mem=200G]"
 
 ```
 
-To fit GEVD and claculate P value:
+c) To fit GEVD and claculate P value:
 Note: Script 18_compute_pvalue.bsub uses **17_fit_gevd_compute_pvalue.R**.
 ```bash
 bsub < scripts/18_compute_pvalue.bsub -R "rusage[mem=200G]"
@@ -212,11 +228,18 @@ bsub < scripts/18_compute_pvalue.bsub -R "rusage[mem=200G]"
 
 | **Script** | **Function** |
 | --- | --- |
-| 09 | [Parallel ASSET](scripts/09_asset_parallel.R) |
-| 10 | [Meta-analysis with METAL](scripts/10_Metal.bsub) || **Script** | **Function** |
-| --- | --- |
-| 09 | [Parallel ASSET](scripts/09_asset_parallel.R) |
-| 10 | [Meta-analysis with METAL](scripts/10_Metal.bsub) |
+| LDSC |  |
+| 11 | [GWASlab](scripts/11_gwaslab_ldsc.bsub) |
+| 12 | [LDSC Munge](scripts/12_ldsc_munge.bsub) |
+| 13 | [LDSC](scripts/13_ldsc.bsub) |
+| 14 | [Combine LDSC Results](scripts/14_combine_ldsc_results.sh) |
+| GPS-GEV |  |
+| 15 | [Compute GPS](scripts/15_computeGPScli.bsub) |
+| 16 | [Permute GPS](scripts/16_permuteTraitsCLI.bsub) |
+| 17 | [Fit GEV-Pvalue R script ](scripts/17_fit_gevd_compute_pvalue.R) |
+| 18 | [Runner for script 17](scripts/18_compute_pvalue.bsub) |
+
+
 
 
 #### 5) Create FUMA inputs
