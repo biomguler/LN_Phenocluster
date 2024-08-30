@@ -244,18 +244,13 @@ bsub < scripts/18_compute_pvalue.bsub -R "rusage[mem=200G]"
 
 #### 5) Create FUMA inputs
 
-  FUMA accepts GWAS summary statistics less than 600Mb and in a certain format. To create FUMA inputs for REGENIE, METAL and ASSET, we created custom R scripts.
-
-  a) REGENIE to FUMA
-
-```console
-Rscript --slave --no-restore --no-save scripts/19_regenie2fuma_input.R
-```
+  will be described here full!!
 
 
 #### 7) Plots
 
-  will be described here full!!
+  -GPS_LDSC corrplot
+  -Forest plot
 
 
 * * * * *
