@@ -292,7 +292,7 @@ We used the [SuSiE (Sum of Single Effects)](https://github.com/stephenslab/susie
 
 LD matrices are stored in `.npz` sparse format along with SNP metadata in `.gz`. We convert these into `.feather` and `.csv` formats using the `ld_loader` module.
 
->[!Note:]
+> [!Note:]
 > The npz to  feather format conversation adapted from [polyfun](https://github.com/omerwe/polyfun/wiki/7.-FAQ). Thank you to Omer Weissbrod!
 
 
