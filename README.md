@@ -106,65 +106,60 @@ List of script and their functions for the Step 2:
 
 | **Script** | **Function** |
 | --- | --- |
-| 04 | [QC genotype for regenie step1](02_ukb_gwas/04_qc.sh) |
-| 05 | [REGENIE STEP1](02_ukb_gwas/05_regenie_step1.bsub) |
-| 06 | [REGENIE STEP2](02_ukb_gwas/06_regenie_step2.bsub) |
-| 07 | [Merge REGENIE OUTPUTS](02_ukb_gwas/07_merge_regenie_outputs.sh) |
-| 08 | [Filter and format SUMSTATS](02_ukb_gwas/08_filter_format_sumstats.bsub) |
+| 03 | [QC genotype for regenie step1](02_ukb_gwas/03_qc.sh) |
+| 04 | [REGENIE STEP1](02_ukb_gwas/04_regenie_step1.bsub) |
+| 05 | [REGENIE STEP2](02_ukb_gwas/05_regenie_step2.bsub) |
+| 06 | [Merge REGENIE OUTPUTS](02_ukb_gwas/06_merge_regenie_outputs.sh) |
+| 07 | [Filter and format SUMSTATS](02_ukb_gwas/07_filter_format_sumstats.bsub) |
 
 </p>
 
 In this step, provided scripts used to genearate GWAS results from UKB. REGENIE uses a two-step approach. In the first step, original non-imputed genotype data is used, filtering only high-quality genotyped variants: minor allele frequency (MAF) > 1%, minor allele count (MAC) > 5, genotyping rate > 99%, Hardy-Weinberg equilibrium (HWE) test P > 1E−08, <1% missingness. The quality control of genotype data and filtering was done using plink2 software. The script 04_qc.sh combines all chromosomes and creates a list of SNPs that meet QC criteria.
 
 ```bash
-bash scripts/04_qc.sh
+bash 02_ukb_gwas/03_qc.sh
 
 ```
 
 After the QC step, REGENIE step 1 can be run:
 
 ```bash
-bsub < scripts/05_regenie_step1.bsub -R "rusage[mem=32G]"
+bsub < 02_ukb_gwas/04_regenie_step1.bsub -R "rusage[mem=32G]"
 
 ```
 
 REGENIE step 1 will generate a ukb_step1_LM_pred.list file. Using this file and imputed genotype files (bgen), step 2 can be run:
 
 ```bash
-bsub < scripts/06_regenie_step2.bsub -R "rusage[mem=32G]"
+bsub < 02_ukb_gwas/05_regenie_step2.bsub -R "rusage[mem=32G]"
 
 ```
 
 Step 2 will generate GWAS results for each phenotype separated by chromosomes. These files need to be merged by phenotype. To do this, run the merger script:
 
 ```bash
-bash scripts/07_merge_regenie_outputs.sh
+bash 02_ukb_gwas/06_merge_regenie_outputs.sh
 
 ```
 
 Finally, GWAS summary statistics can be filtered and formatted. The script 08_filter_format_sumstats.bsub creates unique SNP IDs (CHR:POS:REF), converts -log10P to P, and filters Info_score and SPA correction failed tests.
 
 ```bash
-bsub < scripts/08_filter_format_sumstats.bsub -R "rusage[mem=32G]"
+bsub < 02_ukb_gwas/07_filter_format_sumstats.bsub -R "rusage[mem=32G]"
 
 ```
 
-List of script and their functions for the Step 2:
+  * * * * *
+
+#### 3) Meta-analysis with METAL
+
 
 | **Script** | **Function** |
 | --- | --- |
-| 04 | [QC genotype for regenie step1](scripts/04_qc.sh) |
-| 05 | [REGENIE STEP1](scripts/05_regenie_step1.bsub) |
-| 06 | [REGENIE STEP2](scripts/06_regenie_step2.bsub) |
-| 07 | [Merge REGENIE OUTPUTS](scripts/07_merge_regenie_outputs.sh) |
-| 08 | [Filter and format SUMSTATS](scripts/08_filter_format_sumstats.bsub) |
+| 08 | [Parallel ASSET](scripts/09_asset_parallel.R) |
+| 09 | [Meta-analysis with METAL](scripts/10_Metal.bsub) |
 
 </p>
-
-
-  * * * * *
-
-#### 3) ASSET and Meta-analysis with METAL
 
 To identify pleiotropic variants in a hypothesis-free manner, we conducted an 'Association analysis based on the SubSETs' approach, called ASSET. ASSET is a collection of statistical methods designed to combine association signals from multiple studies or traits, especially when effects are present in only some studies and may be in opposite directions. This tool searches through all potential subsets of studies, adjusts for multiple testing, and identifies the most significant subset contributing to the overall association, while accounting for correlations due to overlapping participants. We ran the ASSET analysis using a custom R script, which enables parallel computation:
 
@@ -189,7 +184,33 @@ List of script and their functions for the Step 3:
 
 * * * * *
 
-#### 4) GPS-GEV Test and LDSC
+#### 4) ASSET
+
+To identify pleiotropic variants in a hypothesis-free manner, we conducted an 'Association analysis based on the SubSETs' approach, called ASSET. ASSET is a collection of statistical methods designed to combine association signals from multiple studies or traits, especially when effects are present in only some studies and may be in opposite directions. This tool searches through all potential subsets of studies, adjusts for multiple testing, and identifies the most significant subset contributing to the overall association, while accounting for correlations due to overlapping participants. We ran the ASSET analysis using a custom R script, which enables parallel computation:
+
+```
+Rscript --slave --no-restore --no-save scripts/09_asset_parallel.R
+```
+To compare the results from ASSET, phenocluster, and traditional meta-analysis, we performed a meta-analysis using METAL. Since we have seven phenoclusters, we created seven separate scripts for METAL (10_s_metalLM(1-7).sh), and executed all these scripts with 10_Metal.bsub:
+
+```bash
+bsub < scripts/10_Metal.bsub -R "rusage[mem=8G]"
+
+```
+
+List of script and their functions for the Step 3:
+
+| **Script** | **Function** |
+| --- | --- |
+| 09 | [Parallel ASSET](scripts/09_asset_parallel.R) |
+| 10 | [Meta-analysis with METAL](scripts/10_Metal.bsub) |
+
+</p>
+
+* * * * *
+
+
+#### 5) LDSC
 
 To understand the genetic correlation between LN subtypes and the created phenoclusters, we first performed linkage disequilibrium score regression (LDSC) using LDSC v1.0.1 software. The GWAS summary statistics for LN subtypes and phenoclusters were formatted using the munge_sumstats Python script from LDSC to estimate genetic correlation with HapMap3 variants, as recommended. For the genetic correlation estimation, SNPs with a minor allele frequency (MAF) of less than 5% were excluded, and the MHC region (chr6: 25-35 Mb) was also excluded from this analysis. We downloaded the pre-computed linkage disequilibrium (LD) scores for European ancestry from the Alkes Group website [here](https://console.cloud.google.com/storage/browser/broad-alkesgroup-public-requester-pays/).
 
