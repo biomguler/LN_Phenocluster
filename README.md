@@ -156,31 +156,17 @@ bsub < 02_ukb_gwas/07_filter_format_sumstats.bsub -R "rusage[mem=32G]"
 
 | **Script** | **Function** |
 | --- | --- |
-| 08 | [Parallel ASSET](scripts/09_asset_parallel.R) |
-| 09 | [Meta-analysis with METAL](scripts/10_Metal.bsub) |
+| 08 | [METAL parameter](03_meta-analysis/08_s_metalLM.sh) |
+| 09 | [Meta-analysis with METAL](03_meta-analysis/10_Metal.bsub) |
 
 </p>
 
-To identify pleiotropic variants in a hypothesis-free manner, we conducted an 'Association analysis based on the SubSETs' approach, called ASSET. ASSET is a collection of statistical methods designed to combine association signals from multiple studies or traits, especially when effects are present in only some studies and may be in opposite directions. This tool searches through all potential subsets of studies, adjusts for multiple testing, and identifies the most significant subset contributing to the overall association, while accounting for correlations due to overlapping participants. We ran the ASSET analysis using a custom R script, which enables parallel computation:
-
-```
-Rscript --slave --no-restore --no-save scripts/09_asset_parallel.R
-```
-To compare the results from ASSET, phenocluster, and traditional meta-analysis, we performed a meta-analysis using METAL. Since we have seven phenoclusters, we created seven separate scripts for METAL (10_s_metalLM(1-7).sh), and executed all these scripts with 10_Metal.bsub:
+To combine results from UKB, FinnGen and MVP, we performed a fixed-effect meta-analysis using METAL.
 
 ```bash
-bsub < scripts/10_Metal.bsub -R "rusage[mem=8G]"
+bsub < 03_meta-analysis/10_Metal.bsub -R "rusage[mem=8G]"
 
 ```
-
-List of script and their functions for the Step 3:
-
-| **Script** | **Function** |
-| --- | --- |
-| 09 | [Parallel ASSET](scripts/09_asset_parallel.R) |
-| 10 | [Meta-analysis with METAL](scripts/10_Metal.bsub) |
-
-</p>
 
 * * * * *
 
