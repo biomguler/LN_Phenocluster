@@ -100,9 +100,21 @@ Rscript --slave --no-restore --no-save 01_clustering/01_phenocluster.R
 
 * * * * *
 
-#### 2) QC genetic data and GWAS with regenie
+#### 2) UKB-QC genetic data and GWAS with regenie
 
-REGENIE uses a two-step approach. In the first step, original non-imputed genotype data is used, filtering only high-quality genotyped variants: minor allele frequency (MAF) > 1%, minor allele count (MAC) > 5, genotyping rate > 99%, Hardy-Weinberg equilibrium (HWE) test P > 1E−08, <1% missingness. The quality control of genotype data and filtering was done using plink2 software. The script 04_qc.sh combines all chromosomes and creates a list of SNPs that meet QC criteria.
+List of script and their functions for the Step 2:
+
+| **Script** | **Function** |
+| --- | --- |
+| 04 | [QC genotype for regenie step1](02_ukb_gwas/04_qc.sh) |
+| 05 | [REGENIE STEP1](02_ukb_gwas/05_regenie_step1.bsub) |
+| 06 | [REGENIE STEP2](02_ukb_gwas/06_regenie_step2.bsub) |
+| 07 | [Merge REGENIE OUTPUTS](02_ukb_gwas/07_merge_regenie_outputs.sh) |
+| 08 | [Filter and format SUMSTATS](02_ukb_gwas/08_filter_format_sumstats.bsub) |
+
+</p>
+
+In this step, provided scripts used to genearate GWAS results from UKB. REGENIE uses a two-step approach. In the first step, original non-imputed genotype data is used, filtering only high-quality genotyped variants: minor allele frequency (MAF) > 1%, minor allele count (MAC) > 5, genotyping rate > 99%, Hardy-Weinberg equilibrium (HWE) test P > 1E−08, <1% missingness. The quality control of genotype data and filtering was done using plink2 software. The script 04_qc.sh combines all chromosomes and creates a list of SNPs that meet QC criteria.
 
 ```bash
 bash scripts/04_qc.sh
