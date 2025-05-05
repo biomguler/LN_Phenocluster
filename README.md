@@ -46,7 +46,7 @@ The scripts provided in the folders from 01 to 10 and data or example input file
 
 #### 1) Create phenoclusters
 
-The data for somatic mutation patterns (SData1.txt) and approved drugs (SData2.txt) were accessed on [cBioPortal](https://www.cbioportal.org/) and the [Open Targets Platform](https://platform.opentargets.org/), respectively.
+The data for somatic mutation patterns [(SData1.txt)](00_data/SData1.txt) and approved drugs [(SData2.txt)](00_data/SData2.txt)  were accessed on [cBioPortal](https://www.cbioportal.org/) and the [Open Targets Platform](https://platform.opentargets.org/), respectively.
 
 For somatic mutations, each LN phenotype and somatically mutated genes were downloaded from cBioPortal. The LN subtypes-mutated gene binary matrix (0,1) was created based on detected mutated genes without their frequency or position, and the data folder created LN-mutated genes matrix provided as ***SData1.txt***.
 
