@@ -17,3 +17,4 @@ for pheno in "${phenotypes[@]}"; do
     done
 done
 
+

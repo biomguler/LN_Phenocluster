@@ -1,81 +1,44 @@
 #!/bin/bash
 #BSUB -q long
-#BSUB -J ldsc_munge[1-15]
-#BSUB -n 4 
-#BSUB -R "span[ptile=4]"
-#BSUB -R "rusage[mem=8GB]"
-#BSUB -o /your/out/dir/ldsc_munge_%J_%I.out
-#BSUB -e /your/err/dir/ldsc_munge_%J_%I.err
+#BSUB -J ldsc_munge[1-17]
+#BSUB -n 1                  # Request 1 core
+#BSUB -R "span[ptile=1]"    # Request 1 core per node
+#BSUB -R "rusage[mem=8GB]"  # Request 8GB memory
+#BSUB -o /path/to/logs/ldsc_munge_%J_%I.out
+#BSUB -e /path/to/logs/ldsc_munge_%J_%I.err
 
-#This script creates ldsc_munge:sumstats output
+# Load modules
+module load miniconda/23.5.2
 
-#Load modules
-module load anaconda3/2021.05
+# Set environment
+source ~/.bashrc
+conda activate /path/to/conda_envs/ldsc_env
 
-#set env
-source /.bashrc
-conda activate /./.conda/envs/ldsc
-#phenotypes
-pheno1=Cell_B
-pheno2=Cell_P
-pheno3=CLL
-pheno4=DLBCL
-pheno5=Drug_G1
-pheno6=FL
-pheno7=HL
-pheno8=LM
-pheno9=LPL_WM
-pheno10=MGUS
-pheno11=MM_MGUS
-pheno12=MM
-pheno13=MZL
-pheno14=Soma_G1
-pheno15=Soma_G2
+# Move to working directory
+cd /path/to/working/directory
 
+# Define sumstat file
+sumstat_file="ldsc.sumstat.list"
 
-#paths for sumstat files
-path0=/your/dir/sumstats
-path1=${path0}${pheno1}
-path2=${path0}${pheno2}
-path3=${path0}${pheno3}
-path4=${path0}${pheno4}
-path5=${path0}${pheno5}
-path6=${path0}${pheno6}
-path7=${path0}${pheno7}
-path8=${path0}${pheno8}
-path9=${path0}${pheno9}
-path10=${path0}${pheno10}
-path11=${path0}${pheno11}
-path12=${path0}${pheno12}
-path13=${path0}${pheno13}
-path14=${path0}${pheno14}
-path15=${path0}${pheno15}
+# Read the correct line from sumstat file (Skipping the header)
+line=$(sed -n "$((LSB_JOBINDEX + 1))p" "$sumstat_file")
 
-# array job var
-combined1=path${LSB_JOBINDEX}
-combined2=pheno${LSB_JOBINDEX}
+# Assign variables from the line
+trait=$(echo "$line" | cut -f1)
+trait_path=$(echo "$line" | cut -f5)
 
-cd ${!combined1}
+# Define output name
+output_name="${trait}_munged"
 
-
-
-
-# example input: Cell_B_ldsc.ldsc.tsv.gz
-# col.names: CHR     POS     A1      A2      Frq     Beta    Z       P       OR      INFO    N       SNP
-
-############### munge_sumstats ############################
-
-python /./ldsc/munge_sumstats.py \
---sumstats ${!combined2}_ldsc.ldsc.tsv.gz \
---chunksize 500000 \
---merge-alleles /./ldsc/w_hm3.noMHC.snplist \
---maf-min 0.05 \
---frq Frq \
---snp SNP \
---N-col N \
---a1 A1 \
---a2 A2 \
---p P \
---signed-sumstats Z,0 \
---ignore "Beta,OR" \
---out ${!combined1}/${!combined2}_maf0p005_noMHC_munge.sumstats
+# Run LDSC munge_sumstats
+python /path/to/ldsc/munge_sumstats.py \
+  --sumstats "${trait_path}" \
+  --chunksize 500000 \
+  --merge-alleles /path/to/w_hm3.noMHC.snplist \
+  --maf-min 0.05 \
+  --snp SNP \
+  --N-col N \
+  --a1 A1 \
+  --a2 A2 \
+  --p P \
+  --out "${output_name}"

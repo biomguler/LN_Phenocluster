@@ -172,33 +172,38 @@ bsub < 03_meta-analysis/10_Metal.bsub -R "rusage[mem=8G]"
 
 #### 4) ASSET
 
-To identify pleiotropic variants in a hypothesis-free manner, we conducted an 'Association analysis based on the SubSETs' approach, called ASSET. ASSET is a collection of statistical methods designed to combine association signals from multiple studies or traits, especially when effects are present in only some studies and may be in opposite directions. This tool searches through all potential subsets of studies, adjusts for multiple testing, and identifies the most significant subset contributing to the overall association, while accounting for correlations due to overlapping participants. We ran the ASSET analysis using a custom R script, which enables parallel computation:
-
-```
-Rscript --slave --no-restore --no-save scripts/09_asset_parallel.R
-```
-To compare the results from ASSET, phenocluster, and traditional meta-analysis, we performed a meta-analysis using METAL. Since we have seven phenoclusters, we created seven separate scripts for METAL (10_s_metalLM(1-7).sh), and executed all these scripts with 10_Metal.bsub:
-
-```bash
-bsub < scripts/10_Metal.bsub -R "rusage[mem=8G]"
-
-```
-
 List of script and their functions for the Step 3:
 
 | **Script** | **Function** |
 | --- | --- |
-| 09 | [Parallel ASSET](scripts/09_asset_parallel.R) |
-| 10 | [Meta-analysis with METAL](scripts/10_Metal.bsub) |
+| 10 | [Parallel ASSET](04_asset/10_asset_parallel.R) |
+
 
 </p>
+
+To identify pleiotropic variants in a hypothesis-free manner, we conducted an 'Association analysis based on the SubSETs' approach, called ASSET. ASSET is a collection of statistical methods designed to combine association signals from multiple studies or traits, especially when effects are present in only some studies and may be in opposite directions. This tool searches through all potential subsets of studies, adjusts for multiple testing, and identifies the most significant subset contributing to the overall association, while accounting for correlations due to overlapping participants. We ran the ASSET analysis using a custom R script, which enables parallel computation:
+
+```
+Rscript --slave --no-restore --no-save 04_asset/10_asset_parallel.R
+```
+
 
 * * * * *
 
 
 #### 5) LDSC
 
-To understand the genetic correlation between LN subtypes and the created phenoclusters, we first performed linkage disequilibrium score regression (LDSC) using LDSC v1.0.1 software. The GWAS summary statistics for LN subtypes and phenoclusters were formatted using the munge_sumstats Python script from LDSC to estimate genetic correlation with HapMap3 variants, as recommended. For the genetic correlation estimation, SNPs with a minor allele frequency (MAF) of less than 5% were excluded, and the MHC region (chr6: 25-35 Mb) was also excluded from this analysis. We downloaded the pre-computed linkage disequilibrium (LD) scores for European ancestry from the Alkes Group website [here](https://console.cloud.google.com/storage/browser/broad-alkesgroup-public-requester-pays/).
+| **Script** | **Function** |
+| --- | --- |
+| LDSC |  |
+| 11 | [GWASlab](05_ldsc/11_gwaslab_ldsc.bsub) |
+| 12 | [LDSC Munge](05_ldsc/12_ldsc_munge.bsub) |
+| 13 | [LDSC](05_ldsc//13_ldsc.bsub) |
+| 14 | [Combine LDSC Results](05_ldsc//14_combine_ldsc_results.sh) |
+
+</p>
+
+To understand the genetic correlation between LN subtypes and the created phenoclusters, we  performed linkage disequilibrium score regression (LDSC) using LDSC v1.0.1 software. The GWAS summary statistics for LN subtypes and phenoclusters were formatted using the munge_sumstats Python script from LDSC to estimate genetic correlation with HapMap3 variants, as recommended. For the genetic correlation estimation, SNPs with a minor allele frequency (MAF) of less than 5% were excluded, and the MHC region (chr6: 25-35 Mb) was also excluded from this analysis. We downloaded the pre-computed linkage disequilibrium (LD) scores for European ancestry from the Alkes Group website [here](https://console.cloud.google.com/storage/browser/broad-alkesgroup-public-requester-pays/).
 
 a) GWASlab to format sumstats
 
@@ -227,118 +232,34 @@ d) Combine results
 bash 14_combine_ldsc_results.sh
 ```
 
-Due to our relatively small effective sample size (Neff = 4 / (1/Ncases + 1/Ncontrols)), most pairwise correlation tests failed. Therefore, we employed an alternative method called the genome-wide pairwise-association signal sharing (GPS) test [9]. While the GPS test does not provide a quantitative measurement of correlation like LDSC, it does offer evidence against the null hypothesis of bivariate independence.
-
-Recently, the GPS was enhanced by fitting it with a generalized extreme value distribution (GEVD) instead of using the standard exponential transformation as initially proposed. We used the GPS-GEV test, excluding only the MHC region (chr6: 29,624,758-33,170,276). The GPS test statistic for P values from a pair of GWAS was computed using the computeGpsCLI application, and permuteTraitsCLI was used to generate null realizations of the GPS test statistic with 100 permutations. Finally, P values for the GPS statistic were obtained using the fit_gevd_and_compute_pvalue.R script, which fits a generalized extreme value distribution (GEVD) to the null realizations of the GPS statistic and reports a P value.
-
-a) To compute GPS:
-```bash
-bsub < scripts/15_computeGPScli.bsub -R "rusage[mem=200G]"
-
-```
-
-b) To permute GPS:
-```bash
-bsub < scripts/16_permuteTraitsCLI.bsub -R "rusage[mem=200G]"
-
-```
-
-c) To fit GEVD and claculate P value:
-Note: Script 18_compute_pvalue.bsub uses **17_fit_gevd_compute_pvalue.R**.
-```bash
-bsub < scripts/18_compute_pvalue.bsub -R "rusage[mem=200G]"
-
-```
-
-| **Script** | **Function** |
-| --- | --- |
-| LDSC |  |
-| 11 | [GWASlab](scripts/11_gwaslab_ldsc.bsub) |
-| 12 | [LDSC Munge](scripts/12_ldsc_munge.bsub) |
-| 13 | [LDSC](scripts/13_ldsc.bsub) |
-| 14 | [Combine LDSC Results](scripts/14_combine_ldsc_results.sh) |
-| GPS-GEV |  |
-| 15 | [Compute GPS](scripts/15_computeGPScli.bsub) |
-| 16 | [Permute GPS](scripts/16_permuteTraitsCLI.bsub) |
-| 17 | [Fit GEV-Pvalue R script ](scripts/17_fit_gevd_compute_pvalue.R) |
-| 18 | [Runner for script 17](scripts/18_compute_pvalue.bsub) |
-
-</p>
-
 * * * * *
 
 
-#### 5) Create FUMA inputs
+#### 6) HyPrColoc
 
-FUMA requires GWAS summary statistics to be in a specific format and under 600 MB in size. To meet these requirements, we utilized different custom R scripts tailored for Regenie, METAL, and ASSET GWAS summary statistics.
-
-After obtaining the FUMA results for each set of GWAS summary statistics, the results need to be combined and summarized. This was accomplished using the script **22_fuma2functional.R**.
-
-Steps to Prepare FUMA Inputs:
-
-
-a) Regenie to FUMA
-
-```
-Rscript --slave --no-restore --no-save scripts/19_regenie2fuma_input.R
-```
-
-b) METAL to FUMA
-
-```
-Rscript --slave --no-restore --no-save scripts/20_metal2fuma.R
-```
-
-c) ASSET to FUMA
-
-```
-Rscript --slave --no-restore --no-save scripts/21_asset2fuma.R
-```
-
-d) FUMA to summary functional tables
-
-```
-Rscript --slave --no-restore --no-save scripts/22_fuma2functional.R
-```
-
-| **Script** | **Function** |
-| --- | --- |
-| 19 | [REGENIE2FUMA](scripts/19_regenie2fuma_input.R) |
-| 20 | [METAL2FUMA](scripts/20_metal2fuma.R |
-| 21 | [ASSET2FUMA](scripts/21_asset2fuma.R) |
-| 22 | [FUMA2FUNC](scripts/22_fuma2functional.R) |
-
-</p>
 
 * * * * *
 
-
-#### 6) Plots
-The results from the GPS-GEV test and LDSC were visualized using custom R scripts.
-
-Steps to Generate Plots:
-
-a) To generate corrplot for GPS-GEV and LDSC
-
-```
-Rscript --slave --no-restore --no-save scripts/23_gps_corrplot.R
-```
-
-b) To generate custom forest plots
-
-Note: The script was adapted from Katherine Hoffman's blog. The [source](https://www.khstats.com/blog/forest-plots/#just-the-code) was last accessed on 30/08/2024.
-
-```
-Rscript --slave --no-restore --no-save scripts/24_forest_plot.R
-```
+#### 7) susie
 
 
-| **Script** | **Function** |
-| --- | --- |
-| 23 | [GPS_LDSC Corrplot](scripts/23_gps_corrplot.R) |
-| 24 | [Forest plot](scripts/24_forest_plot.R) |
+* * * * *
 
-</p>
+#### 8) FLAMES
+
+
+* * * * *
+
+#### 9) Plots
+
+
+* * * * *
+
+#### 10) Others
+
+I listed other scripts that we used in various steps to format input/output files.
+
+
 
 * * * * *
 
