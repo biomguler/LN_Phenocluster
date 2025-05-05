@@ -1,0 +1,20 @@
+#!/bin/bash
+#BSUB -q long
+#BSUB -J hyprcoloc_analysis[1-321]
+#BSUB -n 1                     # Request 1 core per job
+#BSUB -R "rusage[mem=16GB]"   # Request 16GB of memory per job
+#BSUB -o logs/hyprcoloc_%J_%I.out   # Output logs
+#BSUB -e logs/hyprcoloc_%J_%I.err   # Error logs
+
+# Load the R module
+module load R/4.3.0
+
+# Set the working directory
+cd /path/to/your/HyPrColoc/project
+
+# Define region file and output name
+region_path="/path/to/your/LN_regions.tab"
+outname="LN_regions"
+
+# Run the R script with arguments
+Rscript 03b_hyprcoloc_fast.R single_merged.RData ${region_path} 1 ${outname}

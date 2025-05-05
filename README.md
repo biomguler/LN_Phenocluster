@@ -195,7 +195,6 @@ Rscript --slave --no-restore --no-save 04_asset/10_asset_parallel.R
 
 | **Script** | **Function** |
 | --- | --- |
-| LDSC |  |
 | 11 | [GWASlab](05_ldsc/11_gwaslab_ldsc.bsub) |
 | 12 | [LDSC Munge](05_ldsc/12_ldsc_munge.bsub) |
 | 13 | [LDSC](05_ldsc//13_ldsc.bsub) |
@@ -236,6 +235,15 @@ bash 14_combine_ldsc_results.sh
 
 
 #### 6) HyPrColoc
+
+| **Script** | **Function** |
+| --- | --- |
+| 11 | [GWASlab](05_ldsc/11_gwaslab_ldsc.bsub) |
+| 12 | [LDSC Munge](05_ldsc/12_ldsc_munge.bsub) |
+| 13 | [LDSC](05_ldsc//13_ldsc.bsub) |
+| 14 | [Combine LDSC Results](05_ldsc//14_combine_ldsc_results.sh) |
+
+</p>
 
 
 * * * * *
