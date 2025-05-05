@@ -5,7 +5,7 @@ LN Phenocluster Manuscript Pipeline
 
 **Description:** This repository contains the scripts and pipeline used in the LN phenocluster manuscript. Please follow the scripts listed below to generate the analysis results described in the manuscript.
 
-**Citation:** "M. Guler & F. Canzian, Clustering of Lymphoid Neoplasms by Cell of Origin, Somatic Mutation and Drug Usage Profiles: A Multi-trait Genome-Wide Association Study, ***submitted***, 2024"
+**Citation:** "M. Guler & F. Canzian, Clustering of Lymphoid Neoplasms by Cell of Origin, Somatic Mutation and Drug Usage Profiles: A Multi-trait Genome-Wide Association Study, ***submitted(doi:will be updated)***, 2025"
 
 * * * * *
 
@@ -16,11 +16,11 @@ LN Phenocluster Manuscript Pipeline
 | regenie | 3.2.1 | [regenie](https://github.com/rgcgithub/regenie) |
 | plink | 1.90b6.21 | [plink](https://www.cog-genomics.org/plink/) |
 | plink2 | 2.00a3LM | [plink2](https://www.cog-genomics.org/plink/2.0/) |
-| gps_cpp | beta | [gps_cpp](https://github.com/twillis209/gps_cpp/tree/remove_po_dependency) |
 | R | 4.3.0 or above | [R](https://www.r-project.org/) |
 | METAL | 2020-05-05 | [METAL](https://github.com/statgen/METAL) |
 | LDSC | v1.0.1 | [LDSC](https://github.com/bulik/ldsc) |
 | GWASLab | v3.4.31 | [GWASLab](https://github.com/Cloufield/gwaslab) |
+| FLAMES | v1.1.2 | [FLAMES](https://github.com/Marijn-Schipper/FLAMES) |
 
 ### Required R Packages
 
@@ -34,6 +34,8 @@ LN Phenocluster Manuscript Pipeline
 | parallel | 4.3.0 | [parallel](https://www.R-project.org/) |
 | magrittr | 2.0.3 | [magrittr](https://CRAN.R-project.org/package=magrittr) |
 | colorspace | 2.1.0 | [colorspace](https://doi.org/10.1016/j.csda.2008.11.033) |
+| susieR | 0.12.35 | [susieR](https://github.com/stephenslab/susieR) |
+| HyPrColoc | 0.0.2 | [HyPrColoc](https://github.com/jrs95/hyprcoloc) |
 
 ### Steps
 
