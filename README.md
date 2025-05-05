@@ -37,9 +37,12 @@ LN Phenocluster Manuscript Pipeline
 | susieR | 0.12.35 | [susieR](https://github.com/stephenslab/susieR) |
 | HyPrColoc | 0.0.2 | [HyPrColoc](https://github.com/jrs95/hyprcoloc) |
 
-### Steps
+### Steps and overview
 
 * * * * *
+To reproduce generated results and figures in the article, nearly all scripts provided in this reposotory.
+
+The scripts provided in the folders from 01 to 10 and data or example input files in the 00_data folder.
 
 #### 1) Create phenoclusters
 
