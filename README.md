@@ -46,24 +46,34 @@ The scripts provided in the folders from 01 to 10 and data or example input file
 
 #### 1) Create phenoclusters
 
+List of script and their functions for the Step 1:
+
+| **Script** | **Function** |
+| --- | --- |
+| 00 | [Compare hclust methods](01_clustering/00_compare_hclust_methods.R) |
+| 01 | [Create phenoclusters and visualize](01_clustering/01_phenocluster.R) |
+| 02 | [Runner script for script 00 and 01](01_clustering/02_LNcluster.bsub) |
+
+</p>
+
 The data for somatic mutation patterns [(SData1.txt)](00_data/SData1.txt) and approved drugs [(SData2.txt)](00_data/SData2.txt)  were accessed on [cBioPortal](https://www.cbioportal.org/) and the [Open Targets Platform](https://platform.opentargets.org/), respectively.
 
 For somatic mutations, each LN phenotype and somatically mutated genes were downloaded from cBioPortal. The LN subtypes-mutated gene binary matrix (0,1) was created based on detected mutated genes without their frequency or position, and the data folder created LN-mutated genes matrix provided as ***SData1.txt***.
 
 For the approved drugs, each phenotype was searched on the Open Targets platform, and each drug (at least phase 3 & 4) was manually searched on public databases to check FDA or EMA approval for clinical usage. The LN subtypes-drug binary matrix (0,1) was created based on this information, and the data folder created LN-drug matrix provided as ***SData2.txt***.
 
-After creating these two data files, hierarchical clustering (hclust) analysis methods were compared using the **00_Compare_hclust_method.R** script. The script compares hierarchical clustering (hclust) algorithms by generating correlation plots and calculating the Fowlkes-Mallows Index. The resulting dendrograms are analyzed for cophenetic correlation (Pearson correlation coefficient) and Fowlkes-Mallows Index for different cluster counts (k=3, 4, 5). Finally, the script visualizes these correlations using correlation plots saved as TIFF images.
+After creating these two data files, hierarchical clustering (hclust) analysis methods were compared using the [**00_Compare_hclust_method.R**](01_clustering/00_compare_hclust_methods.R) script. The script compares hierarchical clustering (hclust) algorithms by generating correlation plots and calculating the Fowlkes-Mallows Index. The resulting dendrograms are analyzed for cophenetic correlation (Pearson correlation coefficient) and Fowlkes-Mallows Index for different cluster counts (k=3, 4, 5). Finally, the script visualizes these correlations using correlation plots saved as TIFF images.
 
 > [!NOTE]
 > For somatic mutation data method comparison done with nearly 10 000 genes that are mutated in more than 20% of subtypes becuase of computational restrictions. But, in the next step whole data set used.
 
-After running the **00_Compare_hclust_method.R** script, the selected hclust method is used in the **01_LNcluster.R** script to generate and visualize phenoclusters. The script creates dendrograms using Ward's method and the Jaccard similarity coefficient (in R dist(method = "binary")). The dendrograms are then used to create heatmaps (heatmap.2 from the gplots package) that visualize relationships between drugs or genes and LN subtypes. The resulting heatmaps are saved as TIFF images (drug_plot.tiff and somatic_plot.tiff).
+After running the **00_Compare_hclust_method.R** script, the selected hclust method is used in the [**01_LNcluster.R**](01_clustering/01_phenocluster.R) script to generate and visualize phenoclusters. The script creates dendrograms using Ward's method and the Jaccard similarity coefficient (in R dist(method = "binary")). The dendrograms are then used to create heatmaps (heatmap.2 from the gplots package) that visualize relationships between drugs or genes and LN subtypes. The resulting heatmaps are saved as TIFF images (drug_plot.tiff and somatic_plot.tiff).
 
 To run these scripts, use the following commands:
 
 ```
-Rscript --slave --no-restore --no-save scripts/00_compare_hclust_methods.R
-Rscript --slave --no-restore --no-save scripts/01_phenocluster.R
+Rscript --slave --no-restore --no-save 01_clustering/00_compare_hclust_methods.R
+Rscript --slave --no-restore --no-save 01_clustering/01_phenocluster.R
 ```
 You can run these commands in your R terminal (not console). If you have access to any HPC, you can submit these scripts with a job runner script. The script 03_LNcluster.bsub is created for IBM LSF job scheduler. This script can easily be converted to commonly used schedulers such as SLURM or PBS. An example SLURM script is provided below:
 
@@ -83,20 +93,10 @@ module load R/4.3.0
 cd /scripts
 
 # Rscript
-Rscript --slave --no-restore --no-save scripts/00_compare_hclust_methods.R
-Rscript --slave --no-restore --no-save scripts/01_phenocluster.R
+Rscript --slave --no-restore --no-save 01_clustering/00_compare_hclust_methods.R
+Rscript --slave --no-restore --no-save 01_clustering/01_phenocluster.R
 
 ```
-
-List of script and their functions for the Step 1:
-
-| **Script** | **Function** |
-| --- | --- |
-| 00 | [Compare hclust methods](scripts/00_compare_hclust_methods.R) |
-| 01 | [Create phenoclusters and visualize](scripts/01_phenocluster.R) |
-| 03 | [Runner script for script 00 and 01](scripts/03_LNcluster.bsub) |
-
-</p>
 
 * * * * *
 
