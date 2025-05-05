@@ -1,0 +1,20 @@
+#!/bin/bash
+#BSUB -q long
+#BSUB -J susie[1-186]
+#BSUB -n 1                          # Request 1 core per job
+#BSUB -R "rusage[mem=16GB]"        # Request 16GB of memory per job
+#BSUB -o logs/susie_finemap_%J_%I.out   # Output logs
+#BSUB -e logs/susie_finemap_%J_%I.err   # Error logs
+
+# Load the R module
+module load R/4.3.0
+
+# Change to working directory
+cd /path/to/susie_project
+
+# Input configuration files
+finemap_file="finemap_file.tab"
+gene_file="hg19_gene.position.tab"
+
+# Run SuSiE fine-mapping script
+Rscript 21_susier.R "${finemap_file}" "${gene_file}"

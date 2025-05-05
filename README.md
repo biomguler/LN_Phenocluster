@@ -237,18 +237,112 @@ bash 14_combine_ldsc_results.sh
 #### 6) HyPrColoc
 
 | **Script** | **Function** |
-| --- | --- |
-| 11 | [GWASlab](05_ldsc/11_gwaslab_ldsc.bsub) |
-| 12 | [LDSC Munge](05_ldsc/12_ldsc_munge.bsub) |
-| 13 | [LDSC](05_ldsc//13_ldsc.bsub) |
-| 14 | [Combine LDSC Results](05_ldsc//14_combine_ldsc_results.sh) |
+|------------|-------------|
+| 15 | [HyPrColoc Analysis](06_hyprcoloc/15_hyprcoloc.R) |
+| 16 | [Job Submission for HyPrColoc](06_hyprcoloc/16_hyprcoloc.bsub) |
+| 17 | [Collect HyPrColoc Results](06_hyprcoloc/17_hyprcoloc_results.R) |
 
 </p>
 
+To identify shared genetic signals across LN subtypes and phenoclusters, we performed **colocalization analysis** using the [HyPrColoc](https://github.com/jrs95/hyprcoloc) R package. This method enables simultaneous analysis of multiple traits to detect clusters of traits that share common causal variants.
+
+HyPrColoc was run using pre-merged summary statistics (`single_merged.RData`) and a list of LD-independent regions defined in `LN_regions.tab`. For each region, traits were filtered using a p-value threshold, and beta/SE matrices were constructed for colocalization.
+
+---
+
+##### a) HyPrColoc Analysis per Region
+
+```bash
+Rscript 06_hyprcoloc/15_hyprcoloc.R single_merged.RData LN_regions.tab 1 LN_regions
+#or change arguments:
+Rscript 06_hyprcoloc/15_hyprcoloc.R merged_data.RData regions.tab [pval_threshold] [output_prefix]
+```
+
+##### b) Submit Job Array (321 Regions)
+
+```bash
+bsub < 06_hyprcoloc/16_hyprcoloc.bsub -R "rusage[mem=16G]"
+```
+
+##### c) Combine Results
+
+```bash
+Rscript 06_hyprcoloc/17_hyprcoloc_results.R
+```
 
 * * * * *
 
-#### 7) susie
+#### 7) SuSiE Fine-Mapping
+
+| **Script** | **Function** |
+|------------|-------------|
+| 18 | [LD Loader](07_susie/18_ld_loader.py) – Loads `.npz` LD matrices and SNP metadata, saves to `.feather` and `.csv` |
+| 19 | [Process LD File](07_susie/19_process_ld.py) – Calls the loader for a single LD file |
+| 20 | [Batch Convert LD Files to Feather](07_susie/20_ld_file2feather.bsub) – LSF array job to process LD files in parallel |
+| 21 | [Run SuSiE Fine-Mapping](07_susie/21_susier.R) – Runs SuSiE for each locus and generates summary + plots |
+| 22 | [Submit SuSiE Jobs](07_susie/22_susier.bsub) – LSF array submission for 186 loci |
+| 23 | [Merge SuSiE Results](07_susie/23_merge_susie_results.R) – Aggregates all credible SNPs and sets into tabular outputs |
+
+</p>
+
+We used the [SuSiE (Sum of Single Effects)](https://github.com/stephenslab/susieR) model to fine-map associated loci. This approach integrates GWAS summary statistics and linkage disequilibrium (LD) data to identify credible SNPs contributing to signals in complex traits. The pipeline includes LD conversion, SuSiE execution per region, visualization, and results merging.
+
+
+##### a) Convert LD Matrices from .npz to .feather
+
+LD matrices are stored in `.npz` sparse format along with SNP metadata in `.gz`. We convert these into `.feather` and `.csv` formats using the `ld_loader` module.
+
+>[!Note:]
+> The npz to  feather format conversation adapted from [polyfun](https://github.com/omerwe/polyfun/wiki/7.-FAQ). Thank you to Omer Weissbrod!
+
+
+Submit batch job to process LD files in parallel:
+
+```bash
+bsub < 07_susie/20_ld_file2feather.bsub -R "rusage[mem=16G]"
+```
+
+##### b) Run SuSiE Fine-Mapping per Locus
+
+SuSiE is run region-by-region using locus-specific GWAS summary statistics and LD matrices. This is done using 21_susier.R, with configuration passed via finemap_file.tab.
+
+Example: finemap_file.tab
+
+| Index | Subtype | Lead             | CHR | POS      | type         | sumstatpath                      | ldfile\_path                                 | n       | output\_name |
+| ----- | ------- | ---------------- | --- | -------- | ------------ | -------------------------------- | -------------------------------------------- | ------- | ------------ |
+| 1     | CLL     | 1:23943735\:C\:A | 1   | 23943735 | single       | /path/to/CLL\_sumstats.txt.gz    | /path/to/R\_chr1\_23000001\_26000001.feather | 1108777 | CLL\_1       |
+| 2     | CLL     | 1:40132795\:T\:G | 1   | 40132795 | single       | /path/to/CLL\_sumstats.txt.gz    | /path/to/R\_chr1\_39000001\_42000001.feather | 1108777 | CLL\_2       |
+| 3     | Cell-B  | 1:78086718\:C\:T | 1   | 78086718 | phenocluster | /path/to/CellB\_sumstats.txt.gz  | /path/to/R\_chr1\_77000001\_80000001.feather | 1118280 | Cell-B\_3    |
+| 4     | LN      | 1:78086718\:C\:T | 1   | 78086718 | phenocluster | /path/to/LN\_sumstats.txt.gz     | /path/to/R\_chr1\_77000001\_80000001.feather | 1258753 | LN\_4        |
+| 5     | Drug-G1 | 1:78450517\:C\:A | 1   | 78450517 | phenocluster | /path/to/DrugG1\_sumstats.txt.gz | /path/to/R\_chr1\_77000001\_80000001.feather | 1122035 | Drug-G1\_5   |
+| 6     | Soma-G2 | 1:78450517\:C\:A | 1   | 78450517 | phenocluster | /path/to/SomaG2\_sumstats.txt.gz | /path/to/R\_chr1\_77000001\_80000001.feather | 1116131 | Soma-G2\_6   |
+
+
+Submit an LSF job array for all regions:
+
+
+```bash
+bsub < 07_susie/22_susier.bsub -R "rusage[mem=16G]"
+```
+
+##### c) Output Files (per locus)
+
+For each region, SuSiE outputs the following:
+
+*_credible_snps.tab – SNPs with SuSiE PIPs, R², and credible set assignments
+
+*_credible_set_info.tab – Metadata about credible sets
+
+*_fm_regionalplot.jpeg – Multi-panel plot showing:
+-log10(p), PIP, and gene annotations
+
+##### d) Merge Results Across Loci
+
+After all jobs are completed, combine the SuSiE output files into unified results using:
+
+```bash
+Rscript 07_susie/23_merge_susie_results.R
+```
 
 
 * * * * *
