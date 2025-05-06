@@ -349,6 +349,15 @@ Rscript 07_susie/23_merge_susie_results.R
 
 #### 8) FLAMES
 
+| **Script** | **Function**                                                                                                             |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------ |
+| 24         | [locus2set.R](08_flames/24_locus2set.R) – Converts GWAS loci to indexed sets for downstream use                          |
+| 25         | [indexfile.R](08_flames/25_indexfile.R) – Generates index files mapping loci to phenotypes                               |
+| 26     | [FLAMES.bsub](08_flames/FLAMES.bsub) – LSF array job to run feature selection and annotation pipeline for each phenotype |
+
+</p>
+
+We used FLAMES to annotate genomic features and prioritize relevant mechanisms for disease loci. The FLAMES pipeline integrates GWAS data with genomic annotations, performs predictive modeling, and outputs candidate genes.
 
 * * * * *
 

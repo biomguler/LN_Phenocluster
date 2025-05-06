@@ -1,0 +1,58 @@
+#!/bin/bash
+#BSUB -q long
+#BSUB -J FLAMES_analysis[1-14]
+#BSUB -n 1
+#BSUB -R "rusage[mem=32GB]"
+#BSUB -o logs/flames_%J_%I.out
+#BSUB -e logs/flames_%J_%I.err
+
+# Load the module
+module load miniconda/23.5.2
+
+# Activate conda environment
+source ~/.bashrc
+conda activate /path/to/your/conda_envs/FLAMES
+
+# Define variables with placeholders
+gene_annot_path="/path/to/gene_annots.txt"
+feature_mat_prefix="/path/to/features_munged/pops_features"
+control_features="/path/to/control.features"
+annotation_data="/path/to/Annotation_data"
+out_flames="/path/to/output/flames_out"
+
+# Define phenotype list
+phenos=("CLL" "Cell-B" "LN" "Drug-G1" "Soma-G2" "MM" "Cell-P" "MGUS" "MM-MGUS" "Soma-G1" "FL" "LPL-WM" "DLBCL" "HL")
+
+pops_out="/path/to/pops_out/${phenos[$((LSB_JOBINDEX-1))]}"
+magma_prefix="/path/to/magma_results/${phenos[$((LSB_JOBINDEX-1))]}"
+index_path="/path/to/${phenos[$((LSB_JOBINDEX-1))]}_indexfile.txt"
+
+# Run pops
+cd /path/to/pops || { echo "Directory not found"; exit 1; }
+
+python pops.py \
+--gene_annot_path "$gene_annot_path" \
+--feature_mat_prefix "$feature_mat_prefix" \
+--num_feature_chunks 116 \
+--magma_prefix "$magma_prefix" \
+--control_features "$control_features" \
+--out_prefix "$pops_out"
+
+# Run annotations
+cd /path/to/FLAMES || { echo "Directory not found"; exit 1; }
+
+python FLAMES.py annotate \
+-a "$annotation_data" \
+-p "$pops_out".preds \
+-m "$magma_prefix".genes.out \
+-mt "$magma_prefix".gsa.out \
+-id "$index_path" \
+-c95 False
+
+# Run FLAMES
+out_pheno="${phenos[$((LSB_JOBINDEX-1))]}"
+
+python FLAMES.py FLAMES \
+-id "$index_path" \
+-o "$out_flames" \
+-f "$out_pheno"
