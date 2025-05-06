@@ -1,4 +1,4 @@
-LN Phenocluster Manuscript Pipeline
+# LN Phenocluster Manuscript Pipeline
 -----------------------------
 
 **Project Name:** Lymphoid neoplasms (LN) phenocluster
@@ -40,13 +40,13 @@ LN Phenocluster Manuscript Pipeline
 ### Steps and overview
 
 * * * * *
-To reproduce generated results and figures in the article, nearly all scripts provided in this reposotory.
+To reproduce the results and figures presented in the manuscript, nearly all scripts used are provided in this repository.
 
 The scripts provided in the folders from 01 to 10 and data or example input files in the 00_data folder.
 
 #### 1) Create phenoclusters
 
-List of script and their functions for the Step 1:
+List of scripts and their functions for Step 1:
 
 | **Script** | **Function** |
 | --- | --- |
@@ -65,7 +65,7 @@ For the approved drugs, each phenotype was searched on the Open Targets platform
 After creating these two data files, hierarchical clustering (hclust) analysis methods were compared using the [**00_Compare_hclust_method.R**](01_clustering/00_compare_hclust_methods.R) script. The script compares hierarchical clustering (hclust) algorithms by generating correlation plots and calculating the Fowlkes-Mallows Index. The resulting dendrograms are analyzed for cophenetic correlation (Pearson correlation coefficient) and Fowlkes-Mallows Index for different cluster counts (k=3, 4, 5). Finally, the script visualizes these correlations using correlation plots saved as TIFF images.
 
 > [!NOTE]
-> For somatic mutation data method comparison done with nearly 10 000 genes that are mutated in more than 20% of subtypes becuase of computational restrictions. But, in the next step whole data set used.
+> For somatic mutation data method comparison done with nearly 10 000 genes that are mutated in more than 20% of subtypes due to computational limitations. But, in the next step whole data set used.
 
 After running the **00_Compare_hclust_method.R** script, the selected hclust method is used in the [**01_LNcluster.R**](01_clustering/01_phenocluster.R) script to generate and visualize phenoclusters. The script creates dendrograms using Ward's method and the Jaccard similarity coefficient (in R dist(method = "binary")). The dendrograms are then used to create heatmaps (heatmap.2 from the gplots package) that visualize relationships between drugs or genes and LN subtypes. The resulting heatmaps are saved as TIFF images (drug_plot.tiff and somatic_plot.tiff).
 
@@ -114,7 +114,7 @@ List of script and their functions for the Step 2:
 
 </p>
 
-In this step, provided scripts used to genearate GWAS results from UKB. REGENIE uses a two-step approach. In the first step, original non-imputed genotype data is used, filtering only high-quality genotyped variants: minor allele frequency (MAF) > 1%, minor allele count (MAC) > 5, genotyping rate > 99%, Hardy-Weinberg equilibrium (HWE) test P > 1E−08, <1% missingness. The quality control of genotype data and filtering was done using plink2 software. The script 04_qc.sh combines all chromosomes and creates a list of SNPs that meet QC criteria.
+In this step, provided scripts used to generate GWAS results from UKB. REGENIE uses a two-step approach. In the first step, original non-imputed genotype data is used, filtering only high-quality genotyped variants: minor allele frequency (MAF) > 1%, minor allele count (MAC) > 5, genotyping rate > 99%, Hardy-Weinberg equilibrium (HWE) test P > 1E−08, <1% missingness. The quality control of genotype data and filtering was done using plink2 software. The script 04_qc.sh combines all chromosomes and creates a list of SNPs that meet QC criteria.
 
 ```bash
 bash 02_ukb_gwas/03_qc.sh
@@ -293,7 +293,7 @@ We used the [SuSiE (Sum of Single Effects)](https://github.com/stephenslab/susie
 LD matrices are stored in `.npz` sparse format along with SNP metadata in `.gz`. We convert these into `.feather` and `.csv` formats using the `ld_loader` module.
 
 > [!Note]
-> The npz to  feather format conversation adapted from [polyfun](https://github.com/omerwe/polyfun/wiki/7.-FAQ). Thank you to Omer Weissbrod!
+> The npz to  feather format conversion adapted from [polyfun](https://github.com/omerwe/polyfun/wiki/7.-FAQ). Thank you to Omer Weissbrod!
 
 
 Submit batch job to process LD files in parallel:
@@ -363,14 +363,7 @@ We used FLAMES to annotate genomic features and prioritize relevant mechanisms f
 
 #### 9) Plots
 
-
-* * * * *
-
-#### 10) Others
-
-I listed other scripts that we used in various steps to format input/output files.
-
-
+ The scripts for all the plots given in the main article and supplementary information.
 
 * * * * *
 
