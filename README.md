@@ -5,7 +5,7 @@
 
 **Description:** This repository contains the scripts and pipeline used in the LN phenocluster manuscript. Please follow the scripts listed below to generate the analysis results described in the manuscript.
 
-**Citation:** "M. Guler & F. Canzian, Clustering of Lymphoid Neoplasms by Cell of Origin, Somatic Mutation and Drug Usage Profiles: A Multi-trait Genome-Wide Association Study, ***submitted(doi:will be updated)***, 2025"
+**Citation:** "Güler, M., Canzian, F. Clustering of lymphoid neoplasms by cell of origin, somatic mutation and drug usage profiles: a multi-trait genome-wide association study. Blood Cancer J. 15, 147 (2025). https://doi.org/10.1038/s41408-025-01351-4"
 
 * * * * *
 
